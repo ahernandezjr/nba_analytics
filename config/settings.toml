@@ -1,0 +1,4 @@
+settings_file_name = "settings.toml"
+
+# File data locations
+DATA_DIR = "data"

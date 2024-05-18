@@ -1,3 +1,4 @@
 colorlog==6.8.2
 basketball_reference_web_scraper==4.14.0
 pandas==2.2.2
+dynaconf==3.2.5

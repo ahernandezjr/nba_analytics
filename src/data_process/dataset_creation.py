@@ -1,8 +1,10 @@
-import os
+import os, sys
 import time
 import pandas as pd
 from basketball_reference_web_scraper import client
-from src.utils.logger import logger
+
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from ..utils.logger import logger
 
 DATA_DIR = 'data'
 LOGS_DIR = 'logs'
@@ -70,3 +72,4 @@ def collect_data():
 
 if __name__ == '__main__':
     collect_data()
+    
