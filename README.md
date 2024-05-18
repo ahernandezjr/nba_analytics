@@ -36,7 +36,7 @@ To use this project, clone the repository and set up the necessary dependencies.
 
 ## Contributors
 
-- [Your Name](https://github.com/yourusername)
+- [Alexander Hernandez](https://github.com/ahernandezjr)
 
 Feel free to contribute to this project by submitting pull requests or opening issues.
 
