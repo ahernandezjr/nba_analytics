@@ -1,4 +1,5 @@
 settings_file_name = "settings.toml"
 
 # File data locations
-DATA_DIR = "data"
+DATA_DIR = "data/"
+LOGS_DIR = 'logs/'

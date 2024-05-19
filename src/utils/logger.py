@@ -1,38 +1,50 @@
 import os, sys
+import time
 import logging
-import sys
 from colorlog import ColoredFormatter
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-LOGS_DIR = 'logs'
-LOG_FILE = os.path.join(LOGS_DIR, 'nba_player_stats.log')
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+from ..utils.config import settings
 
-# Configure logging
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
 
-# Create a colored formatter
-formatter = ColoredFormatter(
-    "%(log_color)s%(asctime)s - %(levelname)s - %(message)s",
-    datefmt=None,
-    reset=True,
-    log_colors={
-        'DEBUG':    'cyan',
-        'INFO':     'blue',
-        'WARNING':  'yellow',
-        'ERROR':    'red',
-        'CRITICAL': 'red,bg_white',
-    },
-    secondary_log_colors={},
-    style='%'
-)
+LOGS_DIR = settings.LOGS_DIR
 
-# Console handler
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setFormatter(formatter)
-logger.addHandler(console_handler)
+# get current time
+def get_current_time():
+    return time.strftime("[%Y%m%d-%H%M%S]")
 
-# File handler
-file_handler = logging.FileHandler(LOG_FILE, mode='w')
-file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(file_handler)
+def getLogger(name):
+    # Create log file path
+    log_file = os.path.join(LOGS_DIR, f'{get_current_time()}_{name}.log')
+
+    # Configure logging
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    # Create a colored formatter
+    formatter = ColoredFormatter(
+        "%(log_color)s%(asctime)s - %(levelname)s - %(message)s",
+        datefmt=None,
+        reset=True,
+        log_colors={
+            'DEBUG':    'cyan',
+            'INFO':     'blue',
+            'WARNING':  'yellow',
+            'ERROR':    'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+
+    # Console handler
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    # File handler
+    file_handler = logging.FileHandler(log_file, mode='w')
+    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(file_handler)
+
+    return logger
