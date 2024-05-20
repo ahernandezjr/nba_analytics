@@ -9,11 +9,24 @@ from ..utils.config import settings
 
 LOGS_DIR = settings.LOGS_DIR
 
+
 # get current time
 def get_current_time():
     return time.strftime("[%Y%m%d-%H%M%S]")
 
+
+# delete old logs up to x
+def delete_old_logs(keep=5):
+    logs = [f for f in os.listdir(LOGS_DIR) if f.endswith('.log')]
+    logs.sort(key=lambda x: os.path.getmtime(os.path.join(LOGS_DIR, x)))
+    for log in logs[:-keep]:
+        os.remove(os.path.join(LOGS_DIR, log))
+
+
 def getLogger(name):
+    # Delete old logs
+    delete_old_logs()
+
     # Create log file path
     log_file = os.path.join(LOGS_DIR, f'{get_current_time()}_{name}.log')
 

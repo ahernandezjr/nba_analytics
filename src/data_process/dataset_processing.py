@@ -22,8 +22,12 @@ def extract_positions(df):
     Returns:
         pandas.DataFrame: The DataFrame with the positions column cleaned.
     """
+    logger.debug(f"Extracting positions...")
+
     df['positions'] = df['positions'].str.extract("<Position\.(.*): '.*'>", expand=False)
-    logger.info(f"Positions extracted: {df['positions'].unique()}")
+
+    logger.debug(f"Positions extracted: {df['positions'].unique()}")
+
     return df
 
 
@@ -37,8 +41,14 @@ def extract_team(df):
     Returns:
         df (pandas.DataFrame): The DataFrame with the 'team' column cleaned.
     """
-    df['team'] = df['team'].str.extract("Team\.(.*)", expand=False)
-    logger.info(f"Teams extracted: {df['team'].unique()}")
+    logger.debug(f"Extracting teams...")
+
+    filtered_df = df.copy()
+
+    filtered_df['team'] = filtered_df['team'].str.extract("Team\.(.*)", expand=False)
+    
+    logger.debug(f"Teams extracted: {filtered_df['team'].unique()}.")
+
     return df
 
 
@@ -52,10 +62,14 @@ def clean_columns(df):
     Returns:
         pandas.DataFrame: The cleaned DataFrame without the 'is_combined_totals' column.
     """
+    logger.debug(f"Cleaning columns...")
+
     columns_to_drop = ['is_combined_totals']
-    df = df.drop(columns=columns_to_drop)
-    logger.info(f"Columns cleaned: {columns_to_drop}")
-    return df
+    filtered_df = df.drop(columns=columns_to_drop)
+
+    logger.debug(f"Cleaned columns: {columns_to_drop}.")
+
+    return filtered_df
 
 
 def clean_rows(df):
@@ -68,15 +82,17 @@ def clean_rows(df):
     Returns:
         pandas.DataFrame: The cleaned DataFrame.
     """
+    logger.debug("Cleaning rows...")
+
+    filtered_df= df.copy()
+
     # Remove rows with missing values
-    df = df.dropna()
+    filtered_df = filtered_df.dropna()
     
     # Remove rows with duplicate values
-    df = df.drop_duplicates()
+    filtered_df = filtered_df.drop_duplicates()
 
-    logger.info("Rows cleaned: Missing values and duplicates removed.")
-    
-    return df
+    return filtered_df
 
 
 def filter_players_over_5_years(df):
@@ -89,36 +105,54 @@ def filter_players_over_5_years(df):
     Returns:
         pandas.DataFrame: The filtered DataFrame containing players who have played for more than 5 years.
     """
-    # Group by player id and count the number of unique years they played
-    # player_years = df.groupby('slug')['Year'].nunique()
+    logger.debug("Filtering players who have played for more than 5 years...")
 
     # Create a dictionary of players with a unique key of player id and a value of a list of their years played
     player_years_dict = df.groupby('slug')['Year'].apply(list).to_dict()
 
     # Remove a player from the dictionary if the player has played:
-        # for less than 5 years;
-        # during 2001, remove that player from the dictionary;
-        # has a gap in their years played.
+        # 1. for less than 5 years;
+        # 2. during 2001, remove that player from the dictionary; and
+        # 3. has continuous years (checks for a gap or trades).
     player_years_dict = {player : years for player, years in player_years_dict.items() if \
                           len(years) >= 5 and \
                           2001 not in years and \
-                          list(range(years[0], years[4]+1)) == years[0:5]}
+                          list(range(years[0], years[len(years) - 1] + 1)) == years[0:len(years)]}
 
     # Filter the dataframe for players in the dictionary
     df_filtered = df[df['slug'].isin(player_years_dict.keys())]
     
-    # Filter for players who have played for more than 5 years
-    # df_filtered = df[df['slug'].isin(players_over_5_years.index)]
-
     # Sort the DataFrame by player year and id
     df_filtered = df_filtered.sort_values(by=['slug', 'Year'])
-    # df_filtered = df_filtered.sort_values(by=['Year', 'slug'])
-
-    # Filter dataframe so that each player only has their first 5 years of data
-    
-    logger.info(f"Players filtered: Players who have played for more than 5 years.")
 
     return df_filtered
+
+
+def filter_5Year_dataset(df):
+    """
+    Creates a dataset with player statistics for players who have played at least 5 years in the NBA.
+
+    Args:
+        df (pandas.DataFrame): The input dataframe containing player statistics.
+
+    Returns:
+        pandas.DataFrame: The filtered dataframe with player statistics for players who have played at least 5 years in the NBA.
+        dict: A dictionary where the key is the player's slug and the value is a list of the player's statistics.
+    """
+    logger.debug("Filtering dataset for players who have played for more than 5 years...")
+
+    df_filtered = df.copy()
+
+    df_filtered = clean_rows(df_filtered)
+    df_filtered = clean_columns(df_filtered)
+    df_filtered = extract_positions(df_filtered)
+    df_filtered = extract_team(df_filtered)
+    df_filtered = filter_players_over_5_years(df_filtered)
+
+    # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
+    df_dict = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
+
+    return df_filtered, df_dict
 
 
 def print_summary(df, df_filtered):
@@ -132,6 +166,8 @@ def print_summary(df, df_filtered):
     Returns:
     None
     """
+    logger.debug("Printing summary...")
+
     # Print the head of the filtered DataFrame
     print(df_filtered.head())
 
@@ -141,41 +177,23 @@ def print_summary(df, df_filtered):
     # Print the number of entries and the number of unique players in the filtered dataframe
     print(f"Filtered DataFrame: Entries={len(df_filtered)}, Unique Players={len(df_filtered['slug'].unique())}")
 
-    logger.info("Summary printed.")
 
-def filter_5Year_dataset(df):
-    """
-    Creates a dataset with player statistics for players who have played at least 5 years in the NBA.
-
-    Args:
-        df (pandas.DataFrame): The input dataframe containing player statistics.
-
-    Returns:
-        pandas.DataFrame: The filtered dataframe with player statistics for players who have played at least 5 years in the NBA.
-    """
-    df_filtered = df.copy()
-
-    df_filtered = clean_rows(df_filtered)
-    df_filtered = clean_columns(df_filtered)
-    df_filtered = extract_positions(df_filtered)
-    df_filtered = extract_team(df_filtered)
-    df_filtered = filter_players_over_5_years(df_filtered)
-
-    return df_filtered
-
-
-if __name__ == '__main__':
+def run_processing():
     # Load the data
     df = pd.read_csv('data/nba_player_stats.csv')
 
     # Create a dataset of players who have played for more than 5 years
-    df_filtered = filter_5Year_dataset(df)
+    df_filtered, df_dict = filter_5Year_dataset(df)
 
-    # Save the filtered dataset, overwriting the original file
+    # Save the filtered dataset and dictionary to a csv and json file
     df_filtered.to_csv(DATA_DIR + 'nba_player_stats_5years.csv', index=False)
+    df_dict.to_json(DATA_DIR + 'nba_player_stats_5years.json', indent=4)
 
-    logger.info(f"Filtered dataset saved to: '{DATA_DIR}nba_player_stats_5years.csv'.")
+    logger.debug(f"Filtered dataset saved to: '{DATA_DIR}nba_player_stats_5years.csv'.")
 
     # Print the summary
     print_summary(df, df_filtered)
-    
+
+
+if __name__ == '__main__':
+    run_processing()    
