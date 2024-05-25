@@ -1,12 +1,17 @@
 import os, sys
 import pandas as pd
+import torch
 
-# add working directory to the path
 from ..utils.config import settings
 from ..utils.logger import getLogger
 
+
 # Set configs from settings
 DATA_DIR = settings.DATA_DIR
+DATA_FILE_NAME = settings.DATA_FILE_NAME
+DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
+DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
+
 
 # Create logger
 logger = getLogger(__name__)
@@ -125,6 +130,9 @@ def filter_players_over_5_years(df):
     # Sort the DataFrame by player year and id
     df_filtered = df_filtered.sort_values(by=['slug', 'Year'])
 
+    # For each player in the dataframe, keep only the first 5 years
+    df_filtered = df_filtered.groupby('slug').head(5)
+
     return df_filtered
 
 
@@ -148,11 +156,37 @@ def filter_5Year_dataset(df):
     df_filtered = extract_positions(df_filtered)
     df_filtered = extract_team(df_filtered)
     df_filtered = filter_players_over_5_years(df_filtered)
+    # df_filtered = filter_nontensor_values(df_filtered)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
     df_dict = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
 
     return df_filtered, df_dict
+
+
+# TO BE IMPLEMENTED AT DEPTH IN FUTURE
+def filter_nontensor_values(df):
+    """
+    Filters the given DataFrame to remove non-tensor values.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame.
+
+    Returns:
+        pandas.DataFrame: The filtered DataFrame.
+    """
+    logger.debug("Filtering non-tensor values...")
+
+    # Convert values to proper types (i.e. str should be converted to int or float)
+    df_filtered = df.apply(pd.to_numeric, errors='coerce')
+
+    # Filter the DataFrame to remove non-tensor values
+    df_filtered = df.select_dtypes(include=['number'])
+
+    # TO DO: Implement further data cleaning steps here
+        # One hot encoding for categorical values etc...
+
+    return df_filtered
 
 
 def print_summary(df, df_filtered):
@@ -178,21 +212,44 @@ def print_summary(df, df_filtered):
     print(f"Filtered DataFrame: Entries={len(df_filtered)}, Unique Players={len(df_filtered['slug'].unique())}")
 
 
+def save_df_and_dict(df, df_dict):
+    """
+    Saves the given DataFrame to a CSV file.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to save.
+        filename (str): The name of the file to save the DataFrame to.
+
+    Returns:
+        None
+    """
+    logger.debug(f"Saving dataset to '{DATA_FILE_5YEAR_NAME}'...")
+
+    # Create df filename
+    # filename_df = os.path.join(DATA_DIR, f"{filename}.csv")
+    # Create df_dict filename
+    # filename_dict = filename_df = os.path.join(DATA_DIR, f"{filename}.json")
+
+
+    # Save the filtered dataset and dictionary to a csv and json file
+    df.to_csv(DATA_FILE_5YEAR_NAME, index=False)
+    df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
+
+    logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
+    logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON_NAME}.json'.")
+
+
 def run_processing():
     # Load the data
     df = pd.read_csv('data/nba_player_stats.csv')
 
-    # Create a dataset of players who have played for more than 5 years
+    # Create a dataframe of players who have played for more than 5 years
     df_filtered, df_dict = filter_5Year_dataset(df)
 
-    # Save the filtered dataset and dictionary to a csv and json file
-    df_filtered.to_csv(DATA_DIR + 'nba_player_stats_5years.csv', index=False)
-    df_dict.to_json(DATA_DIR + 'nba_player_stats_5years.json', indent=4)
+    # Save the filtered dataframe and dictionary
+    save_df_and_dict(df_filtered, df_dict)
 
-    logger.debug(f"Filtered dataset saved to: '{DATA_DIR}nba_player_stats_5years.csv'.")
-
-    # Print the summary
-    print_summary(df, df_filtered)
+    return df, df_filtered
 
 
 if __name__ == '__main__':
