@@ -12,7 +12,7 @@ LOGS_DIR = settings.LOGS_DIR
 
 # get current time
 def get_current_time():
-    return time.strftime("[%Y%m%d-%H%M%S]")
+    return time.strftime("[%Y%m%d-%H%M%S]"[2:])
 
 
 # delete old logs up to x
@@ -24,6 +24,10 @@ def delete_old_logs(keep=5):
 
 
 def getLogger(name):
+    # Create directory if one does not exist
+    if not os.path.exists(LOGS_DIR):
+        os.makedirs(LOGS_DIR)
+
     # Delete old logs
     delete_old_logs()
 

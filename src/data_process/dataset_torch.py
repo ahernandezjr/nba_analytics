@@ -44,12 +44,14 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         # Remove all non-tensor compatible values from player_data
         player_data = [list(filter(lambda x: type(x) in [int, float], player_data[i])) for i in range(len(player_data))]
 
-        
-
         # Convert player_data to tensor
         player_data = torch.tensor(player_data)
 
-        return player_id, player_data
+        # Create target by removing the last row of player_data
+        targets = player_data[-1]
+        player_data = player_data[0:-1]
+
+        return player_data, targets
 
 
 def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
@@ -91,6 +93,6 @@ def test_dataset():
 
     # Check first 5 items in the dataset
     for i in range(5):
-        player_id, player_stats = dataset[i]
-        print(f"Player ID: {player_id}")
+        player_stats = dataset[i]
+        # print(f"Player ID: {player_id}")
         print(f"Player Stats: {player_stats}")

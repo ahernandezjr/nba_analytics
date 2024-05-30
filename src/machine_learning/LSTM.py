@@ -59,21 +59,43 @@ class LSTM(nn.Module):
         return out
 
 
-def training_loop(epochs, lstm, optimizer, loss_fn, dataloader):
+def training_loop(epochs, model, optimizer, loss_fn, dataloader):
+    # Get pytorch device
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
     for epoch in tqdm(range(epochs)):
         for i, (inputs, targets) in enumerate(dataloader):
-            lstm.train()
-            outputs = lstm.forward(inputs) # forward pass
+            # Train pytorch lstm model loop
+            print(inputs)
+            print(targets)
+
+            inputs, targets = inputs.to(device), targets.to(device) # move to GPU if available
+            outputs = model.forward(inputs) # forward pass
+
+            print(outputs[0])
+            print(outputs[0].shape)
+            print(outputs[1])
+            print(outputs[1].shape)
+
+            loss = loss_fn(outputs, targets) # obtain the loss function
+
             optimizer.zero_grad() # calculate the gradient, manually setting to 0
-            # obtain the loss function
-            loss = loss_fn(outputs, targets)
             loss.backward() # calculates the loss of the loss function
             optimizer.step() # improve from loss, i.e backprop
-            # test loss
-            lstm.eval()
+            
     
 
-# def test_loop(lstm, optimizer, loss_fn, test_loader):
+
+# lstm.train()
+# outputs = lstm.forward(inputs) # forward pass
+# optimizer.zero_grad() # calculate the gradient, manually setting to 0
+# # obtain the loss function
+# loss = loss_fn(outputs, targets)
+# loss.backward() # calculates the loss of the loss function
+# optimizer.step() # improve from loss, i.e backprop
+# # test loss
+# lstm.eval()
+# # def test_loop(lstm, optimizer, loss_fn, test_loader):
 
 def run_lstm(epochs=1000):
     '''
@@ -102,26 +124,30 @@ def run_lstm(epochs=1000):
 
     input_size = 39 # number of features
     hidden_size = 39 # number of features in hidden state
-    num_layers = 5 # number of stacked lstm layers
+    num_layers = 2 # number of stacked lstm layers
 
     num_classes = 39 # number of output classes 
 
     # Create the LSTM model
-    model = LSTM(num_classes=num_classes, 
-                 input_size=input_size, 
-                 hidden_size=hidden_size, 
-                 num_layers=num_layers)
+    # model = LSTM(num_classes=num_classes, 
+    #              input_size=input_size, 
+    #              hidden_size=hidden_size, 
+    #              num_layers=num_layers)
+    
+    model = nn.LSTM(input_size=input_size,
+                    hidden_size=hidden_size,
+                    num_layers=num_layers)
 
     # Define the loss function and the optimizer
     criterion = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     # Training loop
-    training_loop(n_epochs=epochs,
-                lstm=model,
-                optimizer=optimizer,
-                loss_fn=criterion,
-                dataloader=train_loader)
+    training_loop(epochs=epochs,
+                  model=model,
+                  optimizer=optimizer,
+                  loss_fn=criterion,
+                  dataloader=train_loader)
 
 
 # TO DO: Implement to predict every year for first 5 years
