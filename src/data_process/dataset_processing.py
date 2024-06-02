@@ -3,7 +3,7 @@ import pandas as pd
 import torch
 
 from ..utils.config import settings
-from ..utils.logger import getLogger
+from ..utils.logger import get_logger
 
 
 # Set configs from settings
@@ -14,7 +14,7 @@ DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 
 # Create logger
-logger = getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def extract_positions(df):

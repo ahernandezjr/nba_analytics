@@ -12,7 +12,7 @@ LOGS_DIR = settings.LOGS_DIR
 
 # get current time
 def get_current_time():
-    return time.strftime("[%Y%m%d-%H%M%S]"[2:])
+    return time.strftime("[%Y%m%d-%H%M%S]")
 
 
 # delete old logs up to x
@@ -23,8 +23,8 @@ def delete_old_logs(keep=5):
         os.remove(os.path.join(LOGS_DIR, log))
 
 
-def getLogger(name):
-    # Create directory if one does not exist
+# create logger
+def get_logger(name):
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
 
@@ -32,10 +32,11 @@ def getLogger(name):
     delete_old_logs()
 
     # Create log file path
-    log_file = os.path.join(LOGS_DIR, f'{get_current_time()}_{name}.log')
+    log_file = os.path.join(LOGS_DIR, f'{1}.log')
+    logging.basicConfig(filename=log_file)
 
     # Configure logging
-    logger = logging.getLogger()
+    logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
     # Create a colored formatter

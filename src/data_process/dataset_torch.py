@@ -3,7 +3,7 @@ import pandas as pd
 import torch
 
 from ..utils.config import settings
-from ..utils.logger import getLogger
+from ..utils.logger import get_logger
 
 
 # Set configs from settings
@@ -14,7 +14,7 @@ DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 
 # Create logger
-logger = getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class NBAPlayerDataset(torch.utils.data.Dataset):
@@ -93,6 +93,6 @@ def test_dataset():
 
     # Check first 5 items in the dataset
     for i in range(5):
-        player_stats = dataset[i]
+        targets, player_data = dataset[i]
         # print(f"Player ID: {player_id}")
-        print(f"Player Stats: {player_stats}")
+        print(f"Player Targets: {targets}\nPlayers Data: {player_data}")

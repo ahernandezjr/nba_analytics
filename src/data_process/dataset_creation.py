@@ -4,7 +4,7 @@ import pandas as pd
 from basketball_reference_web_scraper import client
 
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-from ..utils.logger import getLogger
+from ..utils.logger import get_logger
 
 DATA_DIR = 'data'
 LOGS_DIR = 'logs'
@@ -18,7 +18,7 @@ BATCH_SIZE = 100
 RETRY_DELAY = 60
 YEARS_BACK = 12
 
-logger = getLogger(__name__)
+logger = get_logger(__name__)
 
 def create_directories():
     for directory in [DATA_DIR, LOGS_DIR]:
