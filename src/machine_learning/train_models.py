@@ -48,14 +48,13 @@ train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)
 test_loader  = DataLoader(nba_dataset, batch_size=32, shuffle=False)
 
 # Define hyperparameters
-learning_rate = 0.001 # 0.001 lr
+learning_rate = 0.001
 
-input_size = 39 # number of features
+# input_size = 39 # number of features
+input_size  = nba_dataset[0][0].shape[1] # number of features
 hidden_size = 39 # number of features in hidden state
-output_size = 39 # number of output classes 
-
+output_size = nba_dataset[0][0].shape[1] # number of features
 num_layers = 3 # number of stacked lstm layers
-
 
 
 def get_model(model_name, input_size, hidden_size, output_size, num_layers):
@@ -116,19 +115,22 @@ def training_loop(epochs, model, optimizer, loss_fn, dataloader):
 
 
 def test_model(model, dataloader, loss_fn):
+    pbar = tqdm(range(dataloader.__len__()))
     model.eval()
     with torch.no_grad():
-        for i, (inputs, targets) in enumerate(dataloader):
-            loss = None
-            outputs = None
-            if model.name == 'nn_lstm':
-                outputs = model.forward(inputs)[0]
-                loss = loss_fn(outputs[:, -1], targets)
-            else:
-                outputs = model.forward(inputs) # forward pass, takes 0 index to ignore weights
-                loss = loss_fn(outputs, inputs)
+        for epoch in pbar:
+            for i, (inputs, targets) in enumerate(dataloader):
+                loss = None
+                outputs = None
+                if model.name == 'nn_lstm':
+                    outputs = model.forward(inputs)[0]
+                    loss = loss_fn(outputs[:, -1], targets)
+                else:
+                    outputs = model.forward(inputs) # forward pass, takes 0 index to ignore weights
+                    loss = loss_fn(outputs, inputs)
 
-            print(f"Test Loss: {loss.item()}")
+                pbar.set_description(f"Batch: {i+1}/{len(dataloader)}")
+                pbar.set_postfix({"Loss": loss.item()})
 
 
 def run_model(model_name, epochs=1000):
@@ -164,7 +166,7 @@ def run_model(model_name, epochs=1000):
 
     # Save the model
     model_name = model.name
-    filename = f"{model_name}_model.pth"
+    filename = f"{model_name}.pth"
     model_path = os.path.join(DATA_DIR, filename)
     
     logger.info(f"Saving model at {model_path}.")

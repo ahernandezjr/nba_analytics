@@ -1,4 +1,5 @@
 import os, sys
+import numpy as np
 import pandas as pd
 import torch
 
@@ -49,9 +50,11 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
 
         # Create target by removing the last row of player_data
         targets = player_data[-1]
-        player_data = player_data[0:-1]
 
         return player_data, targets
+
+    def get_dict(self):
+        return self.dict
 
 
 def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
@@ -96,3 +99,19 @@ def test_dataset():
         targets, player_data = dataset[i]
         # print(f"Player ID: {player_id}")
         print(f"Player Targets: {targets}\nPlayers Data: {player_data}")
+
+
+def get_dataset_example(index=None):
+    """
+    """
+    # Create the dataset
+    dataset = create_dataset()
+
+    # If no index is provided, get a random index of length of the dataset
+    if index is None:
+        index = np.random.randint(len(dataset))
+    
+    # Return the player data and targets
+    player_data, targets = dataset[index]
+    return player_data, targets
+        

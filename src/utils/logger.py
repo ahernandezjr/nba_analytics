@@ -33,15 +33,17 @@ def get_logger(name):
 
     # Create log file path
     log_file = os.path.join(LOGS_DIR, f'{1}.log')
-    logging.basicConfig(filename=log_file)
+    logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
     # Configure logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
 
+    format_string = '| %(asctime)s - %(levelname)s - %(module)s.%(funcName)s:\n---| %(message)s'
+
     # Create a colored formatter
     formatter = ColoredFormatter(
-        "%(log_color)s%(asctime)s - %(levelname)s - %(message)s",
+        '%(log_color)s' + format_string,
         datefmt=None,
         reset=True,
         log_colors={
@@ -55,14 +57,15 @@ def get_logger(name):
         style='%'
     )
 
-    # Console handler
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
+    if not logger.handlers:
+        # Console handler
+        console_handler = logging.StreamHandler(sys.stdout)
+        console_handler.setFormatter(formatter)
+        logger.addHandler(console_handler)
 
-    # File handler
-    file_handler = logging.FileHandler(log_file, mode='w')
-    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(file_handler)
+        # File handler
+        file_handler = logging.FileHandler(log_file, mode='w')
+        file_handler.setFormatter(logging.Formatter(format_string))
+        logger.addHandler(file_handler)
 
     return logger
