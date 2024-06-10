@@ -7,4 +7,5 @@ LOGS_DIR = 'logs/'
 # File data names
 DATA_FILE_NAME = "data/nba_player_stats.csv"
 DATA_FILE_5YEAR_NAME = "data/nba_player_stats_5years.csv"
+DATA_FILE_5YEAR_TENSOR_NAME = "data/nba_player_stats_5years_tensor_ready.csv"
 DATA_FILE_5YEAR_JSON_NAME = "data/nba_player_stats_5years.json"

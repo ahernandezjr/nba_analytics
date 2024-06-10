@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 import matplotlib.pyplot as plt
 
-from ..data_process.dataset_torch import NBAPlayerDataset, get_dataset_example
+from ..dataset.dataset_torch import NBAPlayerDataset, get_dataset_example
 
 from .train_models import get_model
 from .models.lstm import get_custom_lstm, get_nn_LSTM
@@ -31,18 +31,21 @@ logger = get_logger(__name__)
 DATA_DIR = settings.DATA_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
+DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 
 # set device
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+# Load the dataset from the tensor file
+df = pd.read_csv(DATA_FILE_5YEAR_TENSOR_NAME)
 
 # Load the dictionary with proper numeric types
 df_dict = pd.read_json(DATA_FILE_5YEAR_JSON_NAME, typ='series').to_dict()
 
 # Instantiate the dataset
-nba_dataset = NBAPlayerDataset(df_dict)
+nba_dataset = NBAPlayerDataset(df)
 
 # Create a training DataLoader and test DataLoader
 train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)
@@ -54,7 +57,6 @@ learning_rate = 0.001
 # input_size = 39 # number of features
 input_size  = nba_dataset[0][0].shape[1] # number of features
 hidden_size = 39 # number of features in hidden state
-# output_size = 39 # number of output classes 
 output_size = nba_dataset[0][0].shape[1] # number of features
 num_layers = 3 # number of stacked lstm layers
 
@@ -133,9 +135,16 @@ def use_model(file_index=None):
         logger.info(f'Using argument file index {load_index}.')
 
     model = load_model(pth_files, load_index)
+    model = model.to(device)
 
     dataset_index = 0
     player_data, targets = get_dataset_example(dataset_index)
+
+    player_data = player_data.float()
+    targets = targets.float()
+    
+    player_data = player_data.to(device)
+    targets = targets.to(device)
 
     # Test the model on player_data
     outputs = model(player_data)

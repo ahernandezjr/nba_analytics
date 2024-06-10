@@ -10,6 +10,7 @@ from ..utils.logger import get_logger
 DATA_DIR = settings.DATA_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
+DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 
@@ -136,6 +137,40 @@ def filter_players_over_5_years(df):
     return df_filtered
 
 
+# TO BE IMPLEMENTED AT DEPTH IN FUTURE
+def filter_nontensor_values(df):
+    """
+    Filters the given DataFrame to remove non-tensor values.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame.
+
+    Returns:
+        pandas.DataFrame: The filtered DataFrame.
+    """
+    logger.debug("Filtering non-tensor values...")
+
+    df_filtered = df.copy()
+
+    # Perform numerical conversion on all columns except the slug column
+    for column in df_filtered.columns:
+        if column != 'slug':
+            # Convert values to proper types (i.e. str should be converted to int or float)
+            df_filtered[column] = df_filtered[column].apply(pd.to_numeric, errors='coerce')
+
+            # Filter the DataFrame to remove non-tensor values (NOT WORKING)
+            # df_filtered = df_filtered.select_dtypes(include=['number'])
+            # df_filtered = df_filtered.dropna()
+
+    # Drop columns that have NaN values
+    df_filtered = df_filtered.dropna(axis=1)
+
+    # TO DO: Implement further data cleaning steps here
+        # One hot encoding for categorical values etc...
+
+    return df_filtered
+
+
 def filter_5Year_dataset(df):
     """
     Creates a dataset with player statistics for players who have played at least 5 years in the NBA.
@@ -156,37 +191,12 @@ def filter_5Year_dataset(df):
     df_filtered = extract_positions(df_filtered)
     df_filtered = extract_team(df_filtered)
     df_filtered = filter_players_over_5_years(df_filtered)
-    # df_filtered = filter_nontensor_values(df_filtered)
+    df_tensor_ready = filter_nontensor_values(df_filtered)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
-    df_dict = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
+    df_to_dict = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
 
-    return df_filtered, df_dict
-
-
-# TO BE IMPLEMENTED AT DEPTH IN FUTURE
-def filter_nontensor_values(df):
-    """
-    Filters the given DataFrame to remove non-tensor values.
-
-    Args:
-        df (pandas.DataFrame): The input DataFrame.
-
-    Returns:
-        pandas.DataFrame: The filtered DataFrame.
-    """
-    logger.debug("Filtering non-tensor values...")
-
-    # Convert values to proper types (i.e. str should be converted to int or float)
-    df_filtered = df.apply(pd.to_numeric, errors='coerce')
-
-    # Filter the DataFrame to remove non-tensor values
-    df_filtered = df.select_dtypes(include=['number'])
-
-    # TO DO: Implement further data cleaning steps here
-        # One hot encoding for categorical values etc...
-
-    return df_filtered
+    return df_filtered, df_tensor_ready, df_to_dict
 
 
 def print_summary(df, df_filtered):
@@ -212,7 +222,7 @@ def print_summary(df, df_filtered):
     print(f"Filtered DataFrame: Entries={len(df_filtered)}, Unique Players={len(df_filtered['slug'].unique())}")
 
 
-def save_df_and_dict(df, df_dict):
+def save_df_and_dict(df1, df2, df_dict):
     """
     Saves the given DataFrame to a CSV file.
 
@@ -232,10 +242,12 @@ def save_df_and_dict(df, df_dict):
 
 
     # Save the filtered dataset and dictionary to a csv and json file
-    df.to_csv(DATA_FILE_5YEAR_NAME, index=False)
+    df1.to_csv(DATA_FILE_5YEAR_NAME, index=False)
+    df2.to_csv(DATA_FILE_5YEAR_TENSOR_NAME, index=False)
     df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
 
     logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
+    logger.debug(f"Tensor-ready dataset saved to: '{DATA_FILE_5YEAR_TENSOR_NAME}'.")
     logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON_NAME}.json'.")
 
 
@@ -244,10 +256,10 @@ def run_processing():
     df = pd.read_csv('data/nba_player_stats.csv')
 
     # Create a dataframe of players who have played for more than 5 years
-    df_filtered, df_dict = filter_5Year_dataset(df)
+    df_filtered, df_tensor_ready, df_to_dict = filter_5Year_dataset(df)
 
     # Save the filtered dataframe and dictionary
-    save_df_and_dict(df_filtered, df_dict)
+    save_df_and_dict(df_filtered, df_tensor_ready, df_to_dict)
 
     return df, df_filtered
 

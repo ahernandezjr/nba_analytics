@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 import matplotlib.pyplot as plt
 
-from ...data_process.dataset_torch import NBAPlayerDataset
+from ...dataset.dataset_torch import NBAPlayerDataset
 
 from ...utils.config import settings
 from ...utils.logger import get_logger
