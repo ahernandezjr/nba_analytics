@@ -1,6 +1,7 @@
 import os, sys
 import pandas as pd
 import torch
+from sklearn.decomposition import PCA
 
 from ..utils.config import settings
 from ..utils.logger import get_logger
@@ -61,6 +62,17 @@ def extract_team(df):
 def clean_columns(df):
     """
     Removes the 'is_combined_totals' column from the given DataFrame.
+    Current columns to keep:
+        minutes_played
+        made_field_goals
+        attempted_field_goals
+        attempted_three_point_field_goals
+        attempted_free_throws
+        defensive_rebounds
+        turnovers
+        player_efficiency_rating
+        total_rebound_percentage
+        value_over_replacement_player
 
     Args:
         df (pandas.DataFrame): The DataFrame to clean.
@@ -72,6 +84,10 @@ def clean_columns(df):
 
     columns_to_drop = ['is_combined_totals']
     filtered_df = df.drop(columns=columns_to_drop)
+
+    columns_to_keep = ['slug', 'Year',
+                       'minutes_played', 'made_field_goals', 'attempted_field_goals', 'attempted_three_point_field_goals', 'attempted_free_throws', 'defensive_rebounds', 'turnovers', 'player_efficiency_rating', 'total_rebound_percentage', 'value_over_replacement_player']
+    filtered_df = filtered_df[columns_to_keep]
 
     logger.debug(f"Cleaned columns: {columns_to_drop}.")
 
@@ -100,6 +116,49 @@ def clean_rows(df):
 
     return filtered_df
 
+
+def pca_analysis(df):
+    """
+    Applies pca to the given DataFrame.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to PCA.
+
+    Returns:
+        pandas.DataFrame: The PCA output DataFrame.
+    """
+    logger.debug("Applying PCA to data...")
+
+    df_principal = df.drop(columns=['slug'])
+
+    # Implement PCA analysis to reduce the number of features
+    pca = PCA(n_components=None)
+    principalComponents = pca.fit_transform(df_principal)
+    df_principal = pd.DataFrame(data = principalComponents)
+
+    # Add the slug column back to the DataFrame
+    df_principal['slug'] = df['slug']
+    
+
+    return df_principal
+
+def standardize_data(df):
+    """
+    Standardizes the given DataFrame.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to standardize.
+
+    Returns:
+        pandas.DataFrame: The standardized DataFrame.
+    """
+    logger.debug("Standardizing data...")
+
+    # Standardize the data
+    df_standardized = df.copy()
+    df_standardized = (df_standardized - df_standardized.mean()) / df_standardized.std()
+
+    return df_standardized
 
 def filter_players_over_5_years(df):
     """
@@ -168,6 +227,10 @@ def filter_nontensor_values(df):
     # TO DO: Implement further data cleaning steps here
         # One hot encoding for categorical values etc...
 
+    # # Apply PCA to the filtered DataFrame
+    # df_filtered = pca_analysis(df_filtered)
+
+
     return df_filtered
 
 
@@ -188,8 +251,8 @@ def filter_5Year_dataset(df):
 
     df_filtered = clean_rows(df_filtered)
     df_filtered = clean_columns(df_filtered)
-    df_filtered = extract_positions(df_filtered)
-    df_filtered = extract_team(df_filtered)
+    # df_filtered = extract_positions(df_filtered)
+    # df_filtered = extract_team(df_filtered)
     df_filtered = filter_players_over_5_years(df_filtered)
     df_tensor_ready = filter_nontensor_values(df_filtered)
 

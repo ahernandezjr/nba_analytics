@@ -51,7 +51,7 @@ train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)
 test_loader  = DataLoader(nba_dataset, batch_size=32, shuffle=False)
 
 # Define hyperparameters
-learning_rate = 0.001
+learning_rate = 0.01
 
 # input_size = 39 # number of features
 input_size  = nba_dataset[0][0].shape[1] # number of features
@@ -90,7 +90,7 @@ def get_model(model_name, input_size, hidden_size, output_size, num_layers):
         raise ValueError("Model name not recognized.")
 
 
-def training_loop(epochs, model, optimizer, loss_fn, dataloader, train=True):
+def train_test_loop(epochs, model, optimizer, loss_fn, dataloader, train=True):
     '''
     Training loop for the model.
     '''
@@ -108,6 +108,9 @@ def training_loop(epochs, model, optimizer, loss_fn, dataloader, train=True):
             if model.name == 'nn_lstm':
                 outputs = model.forward(inputs)[0]
                 loss = loss_fn(outputs[:, -1], targets)
+            if model.name == 'nn':
+                outputs = model.forward(inputs[:,0])
+                loss = loss_fn(outputs, targets)
             else:
                 outputs = model.forward(inputs)
                 loss = loss_fn(outputs, inputs)
@@ -146,23 +149,23 @@ def run_model(model_name, epochs=1000):
     # Training loop
     logger.info(f"Training model (starting loop)...")
     model.train()
-    training_loop(epochs=epochs,
-                  model=model,
-                  optimizer=optimizer,
-                  loss_fn=criterion,
-                  dataloader=train_loader,
-                  train=True)
+    train_test_loop(epochs=epochs,
+                    model=model,
+                    optimizer=optimizer,
+                    loss_fn=criterion,
+                    dataloader=train_loader,
+                    train=True)
     
     # Test model
     logger.info(f"Evaluating model...")
     model.eval()
     with torch.no_grad():
-        training_loop(epochs=None,
-                      model=model,
-                      optimizer=None,
-                      loss_fn=criterion,
-                      dataloader=test_loader,
-                      train=False)
+        train_test_loop(epochs=None,
+                        model=model,
+                        optimizer=None,
+                        loss_fn=criterion,
+                        dataloader=test_loader,
+                        train=False)
 
     # Save the model
     model_name = model.name

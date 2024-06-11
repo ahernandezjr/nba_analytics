@@ -57,7 +57,7 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         player_data = torch.from_numpy(player_data.values)
 
         # Apply StandardScaler to player_data
-        player_data = self.scaler.transform(player_data)
+        player_data = self.transform(player_data)
         player_data = torch.from_numpy(player_data)
 
         # Create target by taking the last row of player_data
