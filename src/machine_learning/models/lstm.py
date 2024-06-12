@@ -66,6 +66,7 @@ def get_nn_LSTM(input_size, hidden_size, num_layers):
     '''
     Use LSTM model from PyTorch.
     '''
-    return nn.LSTM(
-        input_size=input_size, hidden_size=hidden_size, num_layers=num_layers
+    return nn.LSTM( 
+        input_size=input_size, hidden_size=hidden_size, num_layers=num_layers,
+        batch_first=True
     )

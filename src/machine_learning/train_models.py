@@ -55,10 +55,15 @@ learning_rate = 0.01
 
 # input_size = 39 # number of features
 input_size  = nba_dataset[0][0].shape[1] # number of features
-hidden_size = 39 # number of features in hidden state
+hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
 output_size = nba_dataset[0][0].shape[1] # number of features
 num_layers = 3 # number of stacked lstm layers
 
+logger.info(f"Hyperparameters: input_size={input_size}, hidden_size={hidden_size}, output_size={output_size}, num_layers={num_layers}.")
+logger.info(f"Using learning rate of: {learning_rate}.")
+logger.info(f"Using device: {device}.")
+logger.info(f"Training DataLoader length: {len(train_loader)}")
+logger.info(f"Test DataLoader length: {len(test_loader)}")
 
 def get_model(model_name, input_size, hidden_size, output_size, num_layers):
     '''
@@ -66,8 +71,8 @@ def get_model(model_name, input_size, hidden_size, output_size, num_layers):
     '''
     if model_name == 'nn_lstm':
         model = get_nn_LSTM(input_size=input_size,
-                                hidden_size=hidden_size,
-                                num_layers=num_layers)
+                            hidden_size=hidden_size,
+                            num_layers=num_layers)
         model.name = 'nn_lstm'
         return model
     
@@ -97,18 +102,15 @@ def train_test_loop(epochs, model, optimizer, loss_fn, dataloader, train=True):
     pbar = tqdm(range(epochs)) if train else tqdm(range(dataloader.__len__()))
     for epoch in pbar:
         for i, (inputs, targets) in enumerate(dataloader):
-            # Change inputs and targets to float
-            inputs = inputs.float()
-            targets = targets.float()
-
-            inputs, targets = inputs.to(device), targets.to(device)
+            # Change inputs and targets to float and move to device
+            inputs, targets = inputs.float().to(device), targets.float().to(device)
 
             loss = None
             outputs = None
             if model.name == 'nn_lstm':
                 outputs = model.forward(inputs)[0]
-                loss = loss_fn(outputs[:, -1], targets)
-            if model.name == 'nn':
+                loss = loss_fn(outputs, inputs)
+            elif model.name == 'nn':
                 outputs = model.forward(inputs[:,0])
                 loss = loss_fn(outputs, targets)
             else:
@@ -133,6 +135,7 @@ def run_model(model_name, epochs=1000):
     '''
     logger.info(f"Running {model_name} model on {device}...")
 
+    # Get the model
     model = get_model(model_name=model_name,
                         input_size=input_size,
                         hidden_size=hidden_size,
@@ -144,7 +147,7 @@ def run_model(model_name, epochs=1000):
     # Define the loss function and the optimizer
     criterion = nn.MSELoss()
     # optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     # Training loop
     logger.info(f"Training model (starting loop)...")
@@ -168,7 +171,6 @@ def run_model(model_name, epochs=1000):
                         train=False)
 
     # Save the model
-    model_name = model.name
     filename = f"{model_name}.pth"
     model_path = os.path.join(DATA_DIR, filename)
     

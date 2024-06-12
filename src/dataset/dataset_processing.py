@@ -85,7 +85,7 @@ def clean_columns(df):
     columns_to_drop = ['is_combined_totals']
     filtered_df = df.drop(columns=columns_to_drop)
 
-    columns_to_keep = ['slug', 'Year',
+    columns_to_keep = ['slug', 'Year', 'age',
                        'minutes_played', 'made_field_goals', 'attempted_field_goals', 'attempted_three_point_field_goals', 'attempted_free_throws', 'defensive_rebounds', 'turnovers', 'player_efficiency_rating', 'total_rebound_percentage', 'value_over_replacement_player']
     filtered_df = filtered_df[columns_to_keep]
 
@@ -175,10 +175,11 @@ def filter_players_over_5_years(df):
     # Create a dictionary of players with a unique key of player id and a value of a list of their years played
     player_years_dict = df.groupby('slug')['Year'].apply(list).to_dict()
 
-    # Remove a player from the dictionary if the player has played:
+    # Exclude a player from the dictionary if the player has played:
         # 1. for less than 5 years;
         # 2. during 2001, remove that player from the dictionary; and
         # 3. has continuous years (checks for a gap or trades).
+    # TO DO: ALLOW FOR CONTINUOUS PLAYERS OVER FIRST 5 YEARS AND SPLIT YEARS FOR LARGER TRAINING SET
     player_years_dict = {player : years for player, years in player_years_dict.items() if \
                           len(years) >= 5 and \
                           2001 not in years and \

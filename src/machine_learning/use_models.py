@@ -56,7 +56,7 @@ learning_rate = 0.001
 
 # input_size = 39 # number of features
 input_size  = nba_dataset[0][0].shape[1] # number of features
-hidden_size = 39 # number of features in hidden state
+hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
 output_size = nba_dataset[0][0].shape[1] # number of features
 num_layers = 3 # number of stacked lstm layers
 
