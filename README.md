@@ -1,6 +1,6 @@
-# R Project
+# nba_pistons_report
 
-This is a project for organizing data collection, data processing, and machine learning tasks related to NBA player statistics.
+This is a project for organizing data collection, data processing, and machine learning tasks related to NBA player statistics, specifically to determine valuable players among the DETROIT PISTONS.
 
 ## Directory Structure
 
@@ -14,25 +14,35 @@ The project directory is organized as follows:
   - `nba_player_stats.log`: Log file for NBA player statistics data processing.
 
 - **src/**: Contains the source code for data collection, data processing, and machine learning tasks.
-  - **data_collection/**: Contains scripts for collecting and preprocessing data.
-    - `dataset_creation.py`: Script for creating datasets from NBA API.
+  
     
-  - **data_processing/**: Contains scripts for processing and cleaning data.
-    - *No files yet*: Scripts for data loading, cleaning, and feature engineering can be added here.
+  - **dataset/**: Contains scripts for processing and cleaning data.
+    - `dataset_creation.py`: Module for creating datasets from NBA API using basketball_reference_web_scraper.
+    - `dataset_processing.py`: Module for processing datasets to create a useful dataset.
+    - `dataset_torch.py`: Module for processing datasets for PyTorch/machine learning evaluation.
+    - `filtering.py`: Module for processing datasets further (possibly to be used by `dataset_processing.py`.
     
   - **machine_learning/**: Contains scripts for machine learning tasks.
-    - *No files yet*: Scripts for model training, evaluation, and selection can be added here.
+    - **models/**: Contains models to be used for the machine learning tasks.
+      - `arima.py`: (To Do for better step evaluation)
+      - `lstm.py`: LSTM neural networks (custom and PyTorch built-in) for Many-to-Many prediction.
+      - `neuralnet.py`: Basic neural net for 1-to-1 prediction
+    - `train_models.py`: Module for directly training models in `models/`.
+    - `use_models.py`: Module for directly using models in `models/`.
     
 - **utils/**: Contains utility scripts used across the project.
   - `logger.py`: Utility script for logging messages.
+  - `config.py`: Utility for settings among files.
 
 - **generate_requirements.bat**: Batch file to generate the requirements.txt file.
 - **requirements.txt**: File containing project dependencies.
-- **Other project-related files**: Any other files related to the project.
+- **reference**: Any other files related to the project used for referencing.
 
 ## Usage
 
-To use this project, clone the repository and set up the necessary dependencies. You can then run the scripts in the `src` directory for data collection, processing, and machine learning tasks.
+To use this project, clone the repository and set up the necessary dependencies.
+Create an environment (Ctrl+Shift+P on VSCODE) using the requirements.txt.
+You can then run the scripts in the `main_ipynb.ipynb` for easy use or directly in the `src` directory for data collection, processing, and machine learning tasks.
 
 ## Contributors
 
