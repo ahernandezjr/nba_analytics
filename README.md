@@ -1,10 +1,6 @@
 # nba_pistons_report
-
+**Compiling a report is the primary goal of this project. It is located in the [`REPORT.md`](REPORT.md) file.**
 This is a project for organizing data collection, data processing, and machine learning tasks related to NBA player statistics, specifically to determine valuable players among the DETROIT PISTONS.
-
-## Report
-
-Compiling a report is the primary goal of this project. It is located in the [`PROJECT.md`](PROJECT.md) file.
 
 ## Directory Structure
 
