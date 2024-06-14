@@ -92,6 +92,18 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         """
         return self.scaler.transform(data)
 
+    def inverse_fit_scaler(self, data):
+        """
+        Unfit the data using the inverse transformation of the fitted scaler.
+
+        Args:
+            data (torch.Tensor): The data to untransform.
+
+        Returns:
+            torch.Tensor: The untransformed data.
+        """
+        return self.scaler.inverse_transform(data)
+
 
 def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
                    df_tensor_filename=DATA_FILE_5YEAR_TENSOR_NAME,

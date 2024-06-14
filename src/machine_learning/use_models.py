@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 import matplotlib.pyplot as plt
 
-from ..dataset.dataset_torch import NBAPlayerDataset, get_dataset_example
+from ..dataset.torch import NBAPlayerDataset, get_dataset_example
 
 from .train_models import get_model
 from .models.lstm import get_custom_lstm, get_nn_LSTM
@@ -29,6 +29,7 @@ logger = get_logger(__name__)
 
 # Set configs from settings
 DATA_DIR = settings.DATA_DIR
+MODELS_DIR = settings.MODELS_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
@@ -115,15 +116,15 @@ def use_model(file_index=None):
     Use a model from the data directory
     """
     # If data directory does not exist, exit
-    if not os.path.exists(DATA_DIR):
-        logger.error(f'Data directory {DATA_DIR} does not exist. Exiting...')
+    if not os.path.exists(MODELS_DIR):
+        logger.error(f'Data directory {MODELS_DIR} does not exist. Exiting...')
         sys.exit(1)
 
     # If no files within the data directory end with .pth , exit
-    pth_files = [f for f in os.listdir(DATA_DIR) if f.endswith('.pth')]
+    pth_files = [f for f in os.listdir(MODELS_DIR) if f.endswith('.pth')]
     logger.info(f'Found .pth files: {pth_files}')
     if not pth_files:
-        logger.error(f'No .pth files in {DATA_DIR}. Exiting...')
+        logger.error(f'No .pth files in {MODELS_DIR}. Exiting...')
         sys.exit(1)
 
     # Prompt user to select a .pth file if none is given
@@ -153,3 +154,6 @@ def use_model(file_index=None):
     logger.info(f"Inputs: {player_data}")
     logger.info(f"Outputs: {outputs[0]}")
     logger.info(f"Targets: {targets}")
+
+    logger.info(f"De-scaled Inputs: {nba_dataset.inverse_fit_scaler(player_data.detach().numpy())}")
+    logger.info(f"De-scaled Outputs: {nba_dataset.inverse_fit_scaler(outputs[0].detach().numpy())}")

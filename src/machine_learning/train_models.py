@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 import matplotlib.pyplot as plt
 
-from ..dataset.dataset_torch import NBAPlayerDataset
+from ..dataset.torch import NBAPlayerDataset
 
 from .models.lstm import get_custom_lstm, get_nn_LSTM
 from .models.neuralnet import CustomNN
@@ -28,6 +28,7 @@ logger = get_logger(__name__)
 
 # Set configs from settings
 DATA_DIR = settings.DATA_DIR
+MODELS_DIR = settings.MODELS_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
@@ -57,13 +58,13 @@ learning_rate = 0.01
 input_size  = nba_dataset[0][0].shape[1] # number of features
 hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
 output_size = nba_dataset[0][0].shape[1] # number of features
-num_layers = 3 # number of stacked lstm layers
+num_layers = 5 # number of stacked lstm layers
 
-logger.info(f"Hyperparameters: input_size={input_size}, hidden_size={hidden_size}, output_size={output_size}, num_layers={num_layers}.")
-logger.info(f"Using learning rate of: {learning_rate}.")
-logger.info(f"Using device: {device}.")
-logger.info(f"Training DataLoader length: {len(train_loader)}")
-logger.info(f"Test DataLoader length: {len(test_loader)}")
+logger.info(f"Hyperparameters: input_size={input_size}, hidden_size={hidden_size}, output_size={output_size}, num_layers={num_layers}.\n\
+              Using learning rate of: {learning_rate}.\n\
+              Using device: {device}.\n\
+              Training DataLoader length: {len(train_loader)}\n\
+              Test DataLoader length: {len(test_loader)}")
 
 def get_model(model_name, input_size, hidden_size, output_size, num_layers):
     '''
@@ -172,7 +173,7 @@ def run_model(model_name, epochs=1000):
 
     # Save the model
     filename = f"{model_name}.pth"
-    model_path = os.path.join(DATA_DIR, filename)
+    model_path = os.path.join(MODELS_DIR, filename)
     
     logger.info(f"Saving model at {model_path}.")
     torch.save(model.state_dict(), model_path)
