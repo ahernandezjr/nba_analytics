@@ -4,8 +4,6 @@ This is a project for organizing data collection, data processing, and machine l
 
 ## Report
 
-## Report
-
 Compiling a report is the primary goal of this project. It is located in the [`PROJECT.md`](PROJECT.md) file.
 
 ## Directory Structure
