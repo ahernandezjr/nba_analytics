@@ -3,6 +3,8 @@ import pandas as pd
 import torch
 from sklearn.decomposition import PCA
 
+from . import filtering
+
 from ..utils.config import settings
 from ..utils.logger import get_logger
 
@@ -12,6 +14,7 @@ DATA_DIR = settings.DATA_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
+DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 
@@ -83,15 +86,15 @@ def clean_columns(df):
     logger.debug(f"Cleaning columns...")
 
     columns_to_drop = ['is_combined_totals']
-    filtered_df = df.drop(columns=columns_to_drop)
+    clean_df = df.drop(columns=columns_to_drop)
 
     columns_to_keep = ['slug', 'Year', 'age',
                        'minutes_played', 'made_field_goals', 'attempted_field_goals', 'attempted_three_point_field_goals', 'attempted_free_throws', 'defensive_rebounds', 'turnovers', 'player_efficiency_rating', 'total_rebound_percentage', 'value_over_replacement_player']
-    filtered_df = filtered_df[columns_to_keep]
+    clean_df = clean_df[columns_to_keep]
 
     logger.debug(f"Cleaned columns: {columns_to_drop}.")
 
-    return filtered_df
+    return clean_df
 
 
 def clean_rows(df):
@@ -106,41 +109,16 @@ def clean_rows(df):
     """
     logger.debug("Cleaning rows...")
 
-    filtered_df= df.copy()
+    clean_df = df.copy()
 
     # Remove rows with missing values
-    filtered_df = filtered_df.dropna()
+    clean_df = clean_df.dropna()
     
     # Remove rows with duplicate values
-    filtered_df = filtered_df.drop_duplicates()
+    clean_df = clean_df.drop_duplicates()
 
-    return filtered_df
+    return clean_df
 
-
-def pca_analysis(df):
-    """
-    Applies pca to the given DataFrame.
-
-    Args:
-        df (pandas.DataFrame): The DataFrame to PCA.
-
-    Returns:
-        pandas.DataFrame: The PCA output DataFrame.
-    """
-    logger.debug("Applying PCA to data...")
-
-    df_principal = df.drop(columns=['slug'])
-
-    # Implement PCA analysis to reduce the number of features
-    pca = PCA(n_components=None)
-    principalComponents = pca.fit_transform(df_principal)
-    df_principal = pd.DataFrame(data = principalComponents)
-
-    # Add the slug column back to the DataFrame
-    df_principal['slug'] = df['slug']
-    
-
-    return df_principal
 
 def standardize_data(df):
     """
@@ -160,45 +138,9 @@ def standardize_data(df):
 
     return df_standardized
 
-def filter_players_over_5_years(df):
-    """
-    Filters the given DataFrame to include only players who have played for more than 5 years.
-
-    Args:
-        df (pandas.DataFrame): The input DataFrame containing player data.
-
-    Returns:
-        pandas.DataFrame: The filtered DataFrame containing players who have played for more than 5 years.
-    """
-    logger.debug("Filtering players who have played for more than 5 years...")
-
-    # Create a dictionary of players with a unique key of player id and a value of a list of their years played
-    player_years_dict = df.groupby('slug')['Year'].apply(list).to_dict()
-
-    # Exclude a player from the dictionary if the player has played:
-        # 1. for less than 5 years;
-        # 2. during 2001, remove that player from the dictionary; and
-        # 3. has continuous years (checks for a gap or trades).
-    # TO DO: ALLOW FOR CONTINUOUS PLAYERS OVER FIRST 5 YEARS AND SPLIT YEARS FOR LARGER TRAINING SET
-    player_years_dict = {player : years for player, years in player_years_dict.items() if \
-                          len(years) >= 5 and \
-                          2001 not in years and \
-                          list(range(years[0], years[len(years) - 1] + 1)) == years[0:len(years)]}
-
-    # Filter the dataframe for players in the dictionary
-    df_filtered = df[df['slug'].isin(player_years_dict.keys())]
-    
-    # Sort the DataFrame by player year and id
-    df_filtered = df_filtered.sort_values(by=['slug', 'Year'])
-
-    # For each player in the dataframe, keep only the first 5 years
-    df_filtered = df_filtered.groupby('slug').head(5)
-
-    return df_filtered
-
 
 # TO BE IMPLEMENTED AT DEPTH IN FUTURE
-def filter_nontensor_values(df):
+def clean_nontensor_values(df):
     """
     Filters the given DataFrame to remove non-tensor values.
 
@@ -254,39 +196,17 @@ def filter_5Year_dataset(df):
     df_filtered = clean_columns(df_filtered)
     # df_filtered = extract_positions(df_filtered)
     # df_filtered = extract_team(df_filtered)
-    df_filtered = filter_players_over_5_years(df_filtered)
-    df_tensor_ready = filter_nontensor_values(df_filtered)
+    df_overlap, df_first_five = filtering.filter_players_over_5_years(df_filtered)
+    df_overlap      = clean_nontensor_values(df_overlap)
+    df_tensor_ready = clean_nontensor_values(df_first_five)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
-    df_to_dict = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
+    dict_df = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
 
-    return df_filtered, df_tensor_ready, df_to_dict
-
-
-def print_summary(df, df_filtered):
-    """
-    Prints a summary of the given DataFrame and its filtered version.
-
-    Parameters:
-    - df (pandas.DataFrame): The original DataFrame.
-    - df_filtered (pandas.DataFrame): The filtered DataFrame.
-
-    Returns:
-    None
-    """
-    logger.debug("Printing summary...")
-
-    # Print the head of the filtered DataFrame
-    print(df_filtered.head())
-
-    # Print the number of entries and the number of unique players in the original dataframe
-    print(f"Original DataFrame: Entries={len(df)}, Unique Players={len(df['slug'].unique())}")
-
-    # Print the number of entries and the number of unique players in the filtered dataframe
-    print(f"Filtered DataFrame: Entries={len(df_filtered)}, Unique Players={len(df_filtered['slug'].unique())}")
+    return df_overlap, df_tensor_ready, dict_df
 
 
-def save_df_and_dict(df1, df2, df_dict):
+def save_df_and_dict(df_tensor_ready, df_overlap, df_dict):
     """
     Saves the given DataFrame to a CSV file.
 
@@ -306,13 +226,15 @@ def save_df_and_dict(df1, df2, df_dict):
 
 
     # Save the filtered dataset and dictionary to a csv and json file
-    df1.to_csv(DATA_FILE_5YEAR_NAME, index=False)
-    df2.to_csv(DATA_FILE_5YEAR_TENSOR_NAME, index=False)
+    # df1.to_csv(DATA_FILE_5YEAR_NAME, index=False)
+    df_tensor_ready.to_csv(DATA_FILE_5YEAR_TENSOR_NAME, index=False)
+    df_overlap.to_csv(DATA_FILE_5YEAR_OVERLAP, index=False)
     df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
 
-    logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
+    # logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
     logger.debug(f"Tensor-ready dataset saved to: '{DATA_FILE_5YEAR_TENSOR_NAME}'.")
-    logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON_NAME}.json'.")
+    logger.debug(f"Overlap dataset saved to: '{DATA_FILE_5YEAR_OVERLAP}'.")
+    logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON_NAME}'.")
 
 
 def run_processing():
@@ -320,12 +242,38 @@ def run_processing():
     df = pd.read_csv('data/nba_player_stats.csv')
 
     # Create a dataframe of players who have played for more than 5 years
-    df_filtered, df_tensor_ready, df_to_dict = filter_5Year_dataset(df)
+    df_overlap, df_tensor_ready, dict_df = filter_5Year_dataset(df)
 
     # Save the filtered dataframe and dictionary
-    save_df_and_dict(df_filtered, df_tensor_ready, df_to_dict)
+    save_df_and_dict(df_tensor_ready, df_overlap, dict_df)
 
-    return df, df_filtered
+    return df_tensor_ready, df_overlap, dict_df
+
+
+def print_summary(df_overlap, df_tensor_ready):
+    """
+    Prints a summary of the given DataFrame and its filtered version.
+
+    Parameters:
+    - df (pandas.DataFrame): The original DataFrame.
+    - df_filtered (pandas.DataFrame): The filtered DataFrame.
+
+    Returns:
+    None
+    """
+    logger.debug("Printing summary...")
+
+    # Print the head of the filtered DataFrame
+    print(df_tensor_ready.head())
+
+    # Print the number of entries and the number of unique players in the original dataframe
+    # print(f"Original DataFrame: Entries={len(df)}, Unique Players={len(df['slug'].unique())}")
+
+    # Print the number of entries and the number of unique players in the tensor dataframe
+    print(f"Filtered DataFrame: Entries={len(df_tensor_ready)}, Unique Players={len(df_tensor_ready['slug'].unique())}")
+
+    # Print the number of entries and the number of unique players in the overlap dataframe
+    print(f"Filtered DataFrame: Entries={len(df_overlap)}, Unique Players={len(df_overlap['slug'].unique())}")
 
 
 if __name__ == '__main__':

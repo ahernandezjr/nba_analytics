@@ -2,6 +2,12 @@
 **Compiling a report is the primary goal of this project. It is located in the [`REPORT.md`](REPORT.md) file.**
 This is a project for organizing data collection, data processing, and machine learning tasks related to NBA player statistics, specifically to determine valuable players among the DETROIT PISTONS.
 
+## Usage
+
+To use this project, clone the repository and set up the necessary dependencies.
+Create an environment (Ctrl+Shift+P on VSCODE) using the requirements.txt.
+You can then run the scripts in the `main_ipynb.ipynb` for easy use or directly in the `src` directory for data collection, processing, and machine learning tasks.
+
 ## Directory Structure
 
 The project directory is organized as follows:
@@ -37,11 +43,18 @@ The project directory is organized as follows:
 - **requirements.txt**: File containing project dependencies.
 - **reference**: Any other files related to the project used for referencing.
 
-## Usage
+## Work/To-Do Schedule
 
-To use this project, clone the repository and set up the necessary dependencies.
-Create an environment (Ctrl+Shift+P on VSCODE) using the requirements.txt.
-You can then run the scripts in the `main_ipynb.ipynb` for easy use or directly in the `src` directory for data collection, processing, and machine learning tasks.
+| Day       | Task       |
+|-----------|------------|
+| Monday    | **<input type="checkbox">** (Next) Complete [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py) |
+| Tuesday   | **<input type="checkbox">** None |
+| Wednesday | **<input type="checkbox" checked>** Complete [`dataset`](src/dataset/filtering.py) expansion for any 5 year length players |
+| Thursday  | **<input type="checkbox">** Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. **<br>** **<input type="checkbox">** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md) |
+| Friday    | **<input type="checkbox">** Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py) |
+| Saturday  | **No Progress on Saturdays**       |
+| Sunday    | **<input type="checkbox">** Complete [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py) |
+
 
 ## Contributors
 
