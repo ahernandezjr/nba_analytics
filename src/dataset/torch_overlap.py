@@ -16,6 +16,8 @@ DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
 DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
+FILTER_AMT = settings.FILTER_AMT
+
 
 # Create logger
 logger = get_logger(__name__)
@@ -25,37 +27,25 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
     """
     A custom dataset class for the NBA player statistics dataset.
     """
-    def __init__(self, df):
+    def __init__(self, arr):
         # Load data and create a list of unique player ids from slug column
-        self.df = df
-        self.id_list = self.get_id_list()
+        self.arr = arr
+        # self.id_list = self.get_id_list()
 
         # Create a StandardScaler object and fit it to the data
         self.scaler = StandardScaler()
-        self.fit_scaler(self.df.drop(columns=['slug']))
+        self.fit_scaler(self.arr)
 
     def __len__(self):
         # return len(self.dict)
         # Return length of unique slug values in the slug column
-        return len(self.id_list)
+        return self.arr.shape[0]
 
     def __getitem__(self, idx):
-        # Get player id from index of unique list
-        player_id = self.id_list[idx]
-
-        player_data = self.df.copy()
-
-        # Get columns where slug is equal to the idx
-        player_data = self.df[self.df['slug'] == player_id]
-
-        # Drop the slug column
-        player_data = player_data.drop(columns=['slug'])
+        player_data = self.arr[idx]
 
         # Sort by Year
-        player_data = player_data.sort_values('Year')
-
-        # Convert player_data to tensor
-        player_data = torch.from_numpy(player_data.values)
+        player_data[player_data[:, 0].argsort()]
 
         # Apply StandardScaler to player_data
         player_data = self.transform(player_data)
@@ -66,8 +56,11 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
 
         return player_data, targets
 
-    def get_id_list(self):
-        return self.df['slug'].unique()
+    # def get_id_list(self):
+    #     '''
+    #     Get all unique values from the first column of the 3D numpy array.
+    #     '''
+    #     return np.unique(self.arr[:, :, 0])
 
     # def get_dict(self):
     #     return self.dict
@@ -79,7 +72,8 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         Args:
             data (torch.Tensor): The data to fit the scaler on.
         """
-        self.scaler.fit(data.values)
+        reshaped_data = data.reshape(-1, data.shape[-1])
+        self.scaler.fit(reshaped_data)
 
     def transform(self, data):
         """
@@ -107,7 +101,7 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
 
 
 def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
-                   df_overlap_filename=DATA_FILE_5YEAR_TENSOR_NAME,
+                   np_overlap_filename=DATA_FILE_5YEAR_OVERLAP,
                    dict_filename=DATA_FILE_5YEAR_JSON_NAME):
     """
     Creates a custom dataset for the NBA player statistics.
@@ -120,16 +114,22 @@ def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
     """
     logger.info("Creating dataset...")
 
-    logger.info(f"Loading data from {df_filename}, {df_overlap_filename}, and {dict_filename}...")
+    logger.info(f"Loading data from {df_filename}, {np_overlap_filename}, and {dict_filename}...")
+    
     # Load the dataset with proper numeric types
     # df = pd.read_csv(df_filename).apply(pd.to_numeric, errors='coerce')
-    df = pd.read_csv(df_overlap_filename)
+
+    # Load the numpy array with proper numeric types
+    np_overlap = np.loadtxt(np_overlap_filename, delimiter=",")
+
+    # Reshape the 2D numpy array to its original shape
+    np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
     # Load the dictionary with proper numeric types
     df_dict = pd.read_json(dict_filename, typ='series').to_dict()
 
     # Create the dataset
-    dataset = NBAPlayerDataset(df)
+    dataset = NBAPlayerDataset(np_overlap)
 
     logger.info("Dataset created successfully.")
 

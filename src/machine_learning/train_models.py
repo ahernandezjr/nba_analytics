@@ -13,7 +13,8 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 import matplotlib.pyplot as plt
 
-from ..dataset.torch import NBAPlayerDataset
+# from ..dataset.torch import NBAPlayerDataset
+from ..dataset.torch_overlap import NBAPlayerDataset
 
 from .models.lstm import get_custom_lstm, get_nn_LSTM
 from .models.neuralnet import CustomNN
@@ -32,8 +33,10 @@ MODELS_DIR = settings.MODELS_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
+DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
+FILTER_AMT = settings.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -41,11 +44,18 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # Load the dataset from the tensor file
 df = pd.read_csv(DATA_FILE_5YEAR_TENSOR_NAME)
 
+
+# Load the numpy array with proper numeric types
+np_overlap = np.loadtxt(DATA_FILE_5YEAR_OVERLAP, delimiter=",")
+
+# Reshape the 2D numpy array to its original shape
+np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
+
 # Load the dictionary with proper numeric types
 df_dict = pd.read_json(DATA_FILE_5YEAR_JSON_NAME, typ='series').to_dict()
 
 # Instantiate the dataset
-nba_dataset = NBAPlayerDataset(df)
+nba_dataset = NBAPlayerDataset(np_overlap)
 
 # Create a training DataLoader and test DataLoader
 train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)

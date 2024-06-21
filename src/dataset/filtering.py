@@ -43,12 +43,11 @@ def filter_players_over_5_years(df):
         # 1. for equal to or more than 5 years;
         # 2. during 2001, remove that player from the dictionary; and
         # 3. has continuous 5 years in years (checks for a gap or trades).
-    dict_overlap = {player: years for player, years in player_years_dict.items() if \
-                            len(years) >= 5 and \
-                            2001 not in years and \
-                            any(years[i] + 5 == years[i + 5] \
-                                for i in range(len(years) - 1) \
-                                    if i + 5 < len(years) - 1)}
+    dict_overlap = {player: years for player, years in player_years_dict.items() if
+                            len(years) >= 5 and
+                            2001 not in years and
+                            any(years[i] + 5 == years[i + 5] for i in range(len(years)) if
+                                i + 5 < len(years))}
     
     # Filter the dataframe for players in the dictionary
     df_overlap = df_filtered[df_filtered['slug'].isin(dict_overlap.keys())]
@@ -59,8 +58,8 @@ def filter_players_over_5_years(df):
     # Remove rows if not part of a continuous 5 year period
     # iterate through the DataFrame to remove rows that are not part of a continuous 5 year period
     df_overlap = df_overlap.groupby('slug').filter(lambda x: any(x['Year'].values[i] + 5 == x['Year'].values[i + 5] \
-                                                                     for i in range(len(x['Year'].values) - 1) \
-                                                                            if i + 5 < len(x['Year'].values) - 1))
+                                                                    for i in range(len(x['Year'].values)) \
+                                                                        if i + 5 < len(x['Year'].values)))
 
     # Exclude a player from the dictionary if the player has played:
         # 1. for less than 5 years;

@@ -1,4 +1,5 @@
 import os, sys
+import numpy as np
 import pandas as pd
 import torch
 from sklearn.decomposition import PCA
@@ -17,6 +18,7 @@ DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
 DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
+FILTER_AMT = settings.FILTER_AMT
 
 # Create logger
 logger = get_logger(__name__)
@@ -139,6 +141,49 @@ def standardize_data(df):
     return df_standardized
 
 
+def create_overlap_data(df):
+    """
+    Creates a DataFrame of players who have played for more than 5 years.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing player statistics.
+
+    Returns:
+        numpy.array: The numpy array with player statistics for each 5 consecutive years a player plays.
+    """
+    logger.debug("Creating overlap data...")
+
+    df_overlap = df.copy()
+
+    # Convert DataFrame to numpy array
+    np_overlap = df_overlap.to_numpy()
+
+    # Get all unique slugs
+    np_uniques = np.unique(np_overlap[:, 0])
+
+    # Create a list of numpy arrays for each player
+    np_overlap = [np_overlap[np_overlap[:, 0] == unique] for unique in np_uniques]
+
+    # Create new numpy array
+    np_out = []
+
+    for player_stats in np_overlap:
+        for i in range(len(player_stats) - 5):
+            if player_stats[i][1] + 5 == player_stats[i + 5][1]:
+                np_out.append(player_stats[i:i+5])
+
+    # Convert list of numpy arrays to numpy array
+    np_out = np.array(np_out)
+
+    # Remove the slug column
+    np_out = np_out[:, :, 1:]
+
+    # Convert 3D numpy array to 2D numpy array
+    np_out = np_out.reshape(np_out.shape[0], -1)
+
+    return np_out
+
+
 # TO BE IMPLEMENTED AT DEPTH IN FUTURE
 def clean_nontensor_values(df):
     """
@@ -173,7 +218,6 @@ def clean_nontensor_values(df):
     # # Apply PCA to the filtered DataFrame
     # df_filtered = pca_analysis(df_filtered)
 
-
     return df_filtered
 
 
@@ -186,6 +230,7 @@ def filter_5Year_dataset(df):
 
     Returns:
         pandas.DataFrame: The filtered dataframe with player statistics for players who have played at least 5 years in the NBA.
+        numpy.array: The numpy array with player statistics for each 5 consecutive years a player plays.
         dict: A dictionary where the key is the player's slug and the value is a list of the player's statistics.
     """
     logger.debug("Filtering dataset for players who have played for more than 5 years...")
@@ -197,16 +242,16 @@ def filter_5Year_dataset(df):
     # df_filtered = extract_positions(df_filtered)
     # df_filtered = extract_team(df_filtered)
     df_overlap, df_first_five = filtering.filter_players_over_5_years(df_filtered)
-    df_overlap      = clean_nontensor_values(df_overlap)
+    np_overlap = create_overlap_data(df_overlap)
     df_tensor_ready = clean_nontensor_values(df_first_five)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
     dict_df = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
 
-    return df_overlap, df_tensor_ready, dict_df
+    return df_tensor_ready, np_overlap, dict_df
 
 
-def save_df_and_dict(df_tensor_ready, df_overlap, df_dict):
+def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
     """
     Saves the given DataFrame to a CSV file.
 
@@ -228,7 +273,12 @@ def save_df_and_dict(df_tensor_ready, df_overlap, df_dict):
     # Save the filtered dataset and dictionary to a csv and json file
     # df1.to_csv(DATA_FILE_5YEAR_NAME, index=False)
     df_tensor_ready.to_csv(DATA_FILE_5YEAR_TENSOR_NAME, index=False)
-    df_overlap.to_csv(DATA_FILE_5YEAR_OVERLAP, index=False)
+
+    # Save 3D numpy array to csv
+    np.savetxt(DATA_FILE_5YEAR_OVERLAP, np_overlap, delimiter=',', fmt='%s')
+    # np_overlap.to_csv(DATA_FILE_5YEAR_OVERLAP, index=False)
+
+    # Save dictionary to json
     df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
 
     # logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
@@ -242,15 +292,15 @@ def run_processing():
     df = pd.read_csv('data/nba_player_stats.csv')
 
     # Create a dataframe of players who have played for more than 5 years
-    df_overlap, df_tensor_ready, dict_df = filter_5Year_dataset(df)
+    df_tensor_ready, np_overlap, dict_df = filter_5Year_dataset(df)
 
     # Save the filtered dataframe and dictionary
-    save_df_and_dict(df_tensor_ready, df_overlap, dict_df)
+    save_df_and_dict(df_tensor_ready, np_overlap, dict_df)
 
-    return df_tensor_ready, df_overlap, dict_df
+    return df_tensor_ready, np_overlap, dict_df
 
 
-def print_summary(df_overlap, df_tensor_ready):
+def print_summary(df_tensor_ready, np_overlap):
     """
     Prints a summary of the given DataFrame and its filtered version.
 
@@ -266,6 +316,9 @@ def print_summary(df_overlap, df_tensor_ready):
     # Print the head of the filtered DataFrame
     print(df_tensor_ready.head())
 
+    # Reshape the 2D numpy array to its original shape
+    reshaped_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
+
     # Print the number of entries and the number of unique players in the original dataframe
     # print(f"Original DataFrame: Entries={len(df)}, Unique Players={len(df['slug'].unique())}")
 
@@ -273,7 +326,7 @@ def print_summary(df_overlap, df_tensor_ready):
     print(f"Filtered DataFrame: Entries={len(df_tensor_ready)}, Unique Players={len(df_tensor_ready['slug'].unique())}")
 
     # Print the number of entries and the number of unique players in the overlap dataframe
-    print(f"Filtered DataFrame: Entries={len(df_overlap)}, Unique Players={len(df_overlap['slug'].unique())}")
+    print(f"Filtered DataFrame: Entries={reshaped_overlap.shape[0] * reshaped_overlap.shape[1]}, Unique Players={len(np_overlap)}")
 
 
 if __name__ == '__main__':

@@ -45,15 +45,16 @@ The project directory is organized as follows:
 
 ## Work/To-Do Schedule
 
-| Day       | Task       |
-|-----------|------------|
-| Monday    | **<input type="checkbox">** (Next) Complete [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py) |
-| Tuesday   | **<input type="checkbox">** None |
-| Wednesday | **<input type="checkbox" checked>** Complete [`dataset`](src/dataset/filtering.py) expansion for any 5 year length players |
-| Thursday  | **<input type="checkbox">** Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. **<br>** **<input type="checkbox">** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md) |
-| Friday    | **<input type="checkbox">** Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py) |
-| Saturday  | **No Progress on Saturdays**       |
-| Sunday    | **<input type="checkbox">** Complete [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py) |
+| Day       | Task       | Status |
+|-----------|------------|--------|
+| Monday    | (Next Week) Complete [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py). | &#x2718; |
+| Tuesday   | **None.** | -- |
+| Wednesday |  Complete [`dataset`](src/dataset/filtering.py) expansion for any 5 year length players. | &#x2714; |
+| Thursday  | Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. | &#x2714; |
+| Friday    | Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py). | &#x2718; |
+| Saturday  | **No Progress on Saturdays.** Meanwhile: Re-think [`dataset`](src/dataset/) names for dataset. | --- |
+| Sunday    | Complete [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py). **<br>** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; **<br>** &#x2718; |
+
 
 
 ## Contributors
