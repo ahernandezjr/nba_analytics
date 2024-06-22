@@ -65,16 +65,7 @@ test_loader  = DataLoader(nba_dataset, batch_size=32, shuffle=False)
 learning_rate = 0.01
 
 # input_size = 39 # number of features
-input_size  = nba_dataset[0][0].shape[1] # number of features
-hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
-output_size = nba_dataset[0][0].shape[1] # number of features
-num_layers = 5 # number of stacked lstm layers
 
-logger.info(f"Hyperparameters: input_size={input_size}, hidden_size={hidden_size}, output_size={output_size}, num_layers={num_layers}.\n\
-              Using learning rate of: {learning_rate}.\n\
-              Using device: {device}.\n\
-              Training DataLoader length: {len(train_loader)}\n\
-              Test DataLoader length: {len(test_loader)}")
 
 def get_model(model_name, input_size, hidden_size, output_size, num_layers):
     '''
@@ -84,7 +75,7 @@ def get_model(model_name, input_size, hidden_size, output_size, num_layers):
         model = get_nn_LSTM(input_size=input_size,
                             hidden_size=hidden_size,
                             num_layers=num_layers)
-        model.name = 'nn_lstm'
+        model.name = model_name
         return model
     
     elif model_name == 'custom_lstm':
@@ -92,14 +83,14 @@ def get_model(model_name, input_size, hidden_size, output_size, num_layers):
                                 hidden_size=hidden_size, 
                                 output_size=output_size,
                                 num_layers=num_layers)
-        model.name = 'custom_lstm'
+        model.name = model_name
         return model
     
-    elif model_name == 'nn':
+    elif model_name == 'nn_one_to_one' or model_name == 'nn_many_to_one':
         model = CustomNN(input_size=input_size, 
                          hidden_size=hidden_size, 
                          output_size=output_size)
-        model.name = 'nn'
+        model.name = model_name
         return model
     
     else:
@@ -121,8 +112,14 @@ def train_test_loop(epochs, model, optimizer, loss_fn, dataloader, train=True):
             if model.name == 'nn_lstm':
                 outputs = model.forward(inputs)[0]
                 loss = loss_fn(outputs, inputs)
-            elif model.name == 'nn':
-                outputs = model.forward(inputs[:,0])
+            elif model.name == 'nn_one_to_one':
+                inputs = inputs[:, 0]
+                outputs = model.forward(inputs)
+                loss = loss_fn(outputs, targets)
+            elif model.name == 'nn_many_to_one':
+                inputs = inputs[:, :-1].view(inputs.shape[0], -1)
+                outputs = model.forward(inputs)
+                outputs = outputs
                 loss = loss_fn(outputs, targets)
             else:
                 outputs = model.forward(inputs)
@@ -144,7 +141,20 @@ def run_model(model_name, epochs=1000):
     '''
     Run the LSTM model.
     '''
+    input_size  = nba_dataset[0][0].shape[1] # number of features
+    hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
+    output_size = nba_dataset[0][0].shape[1] # number of features
+    num_layers = 5 # number of stacked lstm layers
+
+    if model_name == 'nn_many_to_one':
+        input_size = nba_dataset[0][0][:-1].flatten().shape[0]
+    
     logger.info(f"Running {model_name} model on {device}...")
+    logger.info(f"Hyperparameters: input_size={input_size}, hidden_size={hidden_size}, output_size={output_size}, num_layers={num_layers}.\n\
+                Using learning rate of: {learning_rate}.\n\
+                Using device: {device}.\n\
+                Training DataLoader length: {len(train_loader)}\n\
+                Test DataLoader length: {len(test_loader)}")
 
     # Get the model
     model = get_model(model_name=model_name,

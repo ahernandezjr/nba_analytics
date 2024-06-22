@@ -50,10 +50,10 @@ The project directory is organized as follows:
 | Monday    | (Next Week) Complete [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py). | &#x2718; |
 | Tuesday   | **None.** | -- |
 | Wednesday |  Complete [`dataset`](src/dataset/filtering.py) expansion for any 5 year length players. | &#x2714; |
-| Thursday  | Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. | &#x2714; |
-| Friday    | Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py). | &#x2718; |
+| Thursday  | Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. |  |
+| Friday    | Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py). | &#x2714; |
 | Saturday  | **No Progress on Saturdays.** Meanwhile: Re-think [`dataset`](src/dataset/) names for dataset. | --- |
-| Sunday    | Complete [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py). **<br>** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; **<br>** &#x2718; |
+| Sunday    | Re-check [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py). **<br>** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; **<br>** &#x2718; |
 
 
 
