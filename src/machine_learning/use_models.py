@@ -1,6 +1,5 @@
 import os, sys
 
-import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
@@ -9,15 +8,9 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler 
-
-import matplotlib.pyplot as plt
-
 from ..dataset.torch import NBAPlayerDataset, get_dataset_example
 
 from .train_models import get_model
-from .models.lstm import get_custom_lstm, get_nn_LSTM
-from .models.neuralnet import CustomNN
 
 from ..utils.config import settings
 from ..utils.logger import get_logger
@@ -55,12 +48,6 @@ test_loader  = DataLoader(nba_dataset, batch_size=32, shuffle=False)
 # Define hyperparameters
 learning_rate = 0.001
 
-# input_size = 39 # number of features
-input_size  = nba_dataset[0][0].shape[1] # number of features
-hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
-output_size = nba_dataset[0][0].shape[1] # number of features
-num_layers = 3 # number of stacked lstm layers
-
 
 def prompt_user(pth_files):
     """
@@ -97,14 +84,25 @@ def load_model(pth_files, load_index):
     pth_file = pth_files[load_index]
     logger.info(f'Loading {pth_file} and creating model...')
 
-    # Load the model
     model_name = pth_file.split('.')[0]
+
+    # input_size = 39 # number of features
+    input_size  = nba_dataset[0][0].shape[1] # number of features
+    hidden_size = nba_dataset[0][0].shape[1] # number of features in hidden state
+    output_size = nba_dataset[0][0].shape[1] # number of features
+    num_layers = 5 # number of stacked lstm layers
+
+    if model_name == 'nn_many_to_one':
+        input_size = nba_dataset[0][0][:-1].flatten().shape[0]
+     
+    # Load the model
     model = get_model(model_name=model_name,
                         input_size=input_size,
                         hidden_size=hidden_size,
                         output_size=output_size,
                         num_layers=num_layers)
-    model.load_state_dict(torch.load(os.path.join(DATA_DIR, pth_file)))
+    
+    model.load_state_dict(torch.load(os.path.join(MODELS_DIR, pth_file)))
     model.eval()
 
     logger.info(f'Loaded model: {model}')
@@ -115,6 +113,10 @@ def use_model(file_index=None):
     """
     Use a model from the data directory
     """
+    all_models = []
+    all_inputs = []
+    all_outputs = []
+
     # If data directory does not exist, exit
     if not os.path.exists(MODELS_DIR):
         logger.error(f'Data directory {MODELS_DIR} does not exist. Exiting...')
@@ -127,33 +129,66 @@ def use_model(file_index=None):
         logger.error(f'No .pth files in {MODELS_DIR}. Exiting...')
         sys.exit(1)
 
-    # Prompt user to select a .pth file if none is given
-    if file_index is None:
-        load_index = prompt_user(pth_files)
-        logger.info(f'Using prompted file index {load_index}.')
-    else:
-        load_index = file_index
-        logger.info(f'Using argument file index {load_index}.')
+    if file_index == -1:
+        load_index = 0
 
-    model = load_model(pth_files, load_index)
-    model = model.to(device)
+    for f in os.listdir(MODELS_DIR):
+        # Prompt user to select a .pth file if none is given
+        if file_index is None:
+            load_index = prompt_user(pth_files)
+            logger.info(f'Using prompted file index {load_index}.')
+        else:
+            load_index = file_index
+            logger.info(f'Using argument file index {load_index}.')
 
-    dataset_index = 0
-    player_data, targets = get_dataset_example(dataset_index)
+        model = load_model(pth_files, load_index)
 
-    player_data = player_data.float()
-    targets = targets.float()
+        model = model.to(device)
+
+        dataset_index = 0
+        inputs, targets = get_dataset_example(dataset_index)
+
+        inputs = inputs.float()
+        targets = targets.float()
+        
+        inputs = inputs.to(device)
+        targets = targets.to(device)
+
+        outputs = None
+        if model.name == 'nn_lstm':
+            outputs = model.forward(inputs)[0]
+            outputs = outputs[0]
+        elif model.name == 'nn_one_to_one':
+            inputs = inputs[0]
+            outputs = model.forward(inputs)
+        elif model.name == 'nn_many_to_one':
+            inputs = inputs[:-1].view(inputs.shape[0], -1)
+            outputs = model.forward(inputs)
+        else:
+            outputs = model.forward(inputs)
+        
+        inputs = inputs.detach().cpu().numpy()
+        outputs = outputs.detach().cpu().numpy()
+
+        # Test the model on player_data
+        all_models.append(model.name)
+        all_inputs.append(inputs)
+        all_outputs.append(outputs)
+
+        logger.info("Model Results:")
+        logger.info(f"Inputs: {inputs}")
+        logger.info(f"Outputs: {outputs}")
+        logger.info(f"Targets: {targets}")
+
+        # logger.info(f"De-scaled Inputs: {nba_dataset.inverse_fit_scaler(inputs.detach().cpu().numpy())}")
+        # logger.info(f"De-scaled Outputs: {nba_dataset.inverse_fit_scaler(outputs[0].detach().cpu().numpy())}")
+        
+        load_index += 1
+        if file_index != -1:
+            return all_models, inputs, outputs
+        
+    return all_models, all_inputs, all_outputs
+        
     
-    player_data = player_data.to(device)
-    targets = targets.to(device)
-
-    # Test the model on player_data
-    outputs = model(player_data)
-
-    logger.info("Model Results:")
-    logger.info(f"Inputs: {player_data}")
-    logger.info(f"Outputs: {outputs[0]}")
-    logger.info(f"Targets: {targets}")
-
-    logger.info(f"De-scaled Inputs: {nba_dataset.inverse_fit_scaler(player_data.detach().numpy())}")
-    logger.info(f"De-scaled Outputs: {nba_dataset.inverse_fit_scaler(outputs[0].detach().numpy())}")
+def iterate_models():
+    pass

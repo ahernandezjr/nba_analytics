@@ -14,7 +14,14 @@ The project directory is organized as follows:
 
 - **data/**: Contains datasets used in the project.
   - `nba_players.csv`: Dataset containing information about NBA players.
-  - `nba_player_stats.csv`: Dataset containing NBA player statistics.
+  - `nba_player_stats_5years_overlap.csv`: Dataset containing every 5 consecutive years of NBA player statistics (from `nba_player_stats_5years.csv`).
+  - `nba_player_stats_5years_tensor_ready.csv`: PyTorch import version of `nba_player_stats_5years.csv`.
+  - `nba_player_stats_5years.csv`: Dataset (csv) containing first 5 years of NBA player statistics.
+  - `nba_player_stats_5years.json`: Json version of `nba_player_stats_5years.csv`.
+  - `nba_players_advanced.csv`: Dataset containing advanced NBA player statistics.
+  - `nba_players_basic.csv`: Dataset containing basic NBA player statistics.
+  - `nba_player_stats.csv`: Dataset containing combined NBA player statistics.
+
 - **logs/**: Contains log files generated during the project.
 
   - `nba_player_stats.log`: Log file for NBA player statistics data processing.
@@ -47,13 +54,13 @@ The project directory is organized as follows:
 
 | Day       | Task       | Status |
 |-----------|------------|--------|
-| Monday    | (Next Week) Complete [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py). | &#x2718; |
-| Tuesday   | **None.** | -- |
-| Wednesday |  Complete [`dataset`](src/dataset/filtering.py) expansion for any 5 year length players. | &#x2714; |
-| Thursday  | Complete [`torch_overlap`](src/dataset/torch_overlap.py) to merge custom dataset. |  |
-| Friday    | Create many(4)-to-one and one-to-one [`nn`](src/machine_learning/models/nn.py). | &#x2714; |
-| Saturday  | **No Progress on Saturdays.** Meanwhile: Re-think [`dataset`](src/dataset/) names for dataset. | --- |
-| Sunday    | Re-check [`nn`](src/machine_learning/models/nn.py) and start [`arima`](src/machine_learning/models/arima.py). **<br>** Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; **<br>** &#x2718; |
+| Monday    | Look into [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py). **<br>**  | &#x2718; |
+| Tuesday   | Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; |
+| Wednesday |  FILL | &#x2718; |
+| Thursday  | FILL | &#x2718; |
+| Friday    | FILL | &#x2718; |
+| Saturday  | **No Progress on Saturdays.** | --- |
+| Sunday    | (Prev) Complete [`nn`](src/machine_learning/models/nn.py) and prep [`use_models`](src/machine_learning/use_models.py) for [`analytics`](src/dataset/analytics.py). | &#x2714; |
 
 
 

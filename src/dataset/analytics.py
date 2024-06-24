@@ -1,19 +1,15 @@
-import os, sys
+import os
 
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
 
 import torch
-import torch.nn as nn
-from torch.autograd import Variable
 from torch.utils.data import DataLoader
-
-from sklearn.preprocessing import StandardScaler, MinMaxScaler 
 
 import matplotlib.pyplot as plt
 
 from .torch import NBAPlayerDataset
+from ..machine_learning.use_models import use_model
 
 from ..utils.config import settings
 from ..utils.logger import get_logger
@@ -155,7 +151,7 @@ def create_pca_plot():
 
 
 # Create graphs
-def create_graphs():
+def create_data_graphs():
     # Get the number of samples
     num_samples = get_num_samples()
 
@@ -203,3 +199,33 @@ def create_graphs():
 
     # Save plots to GRAPHS_DIR
     fig.savefig(os.path.join(settings.GRAPHS_DIR, 'analytics.png'))
+
+
+# Create graphs based on outputs/predictions of all models
+def create_prediction_graphs():
+    models, inputs, outputs = use_model(-1)
+
+
+    
+    # Create a figure to hold all the graphs
+    fig, axs = plt.subplots(2, 2, figsize=(10, 10))
+
+    # For every input and output, create a graph
+    for i in range(len(inputs)):
+        # Calculate the difference between inputs and outputs for the feature
+        diff = [inputs[i][j] - outputs[i][j] for j in range(len(inputs[i]))]
+
+        # Plot the difference
+        axs[i//2, i%2].bar(range(len(diff)), diff)
+        axs[i//2, i%2].set_xlabel('Feature')
+        axs[i//2, i%2].set_ylabel('Difference')
+        axs[i//2, i%2].set_title(f'{models[i]}')
+    
+    # Adjust spacing between subplots
+    plt.tight_layout()
+
+    # Show the plot
+    plt.show()
+
+    # Save the plot to GRAPHS_DIR
+    fig.savefig(os.path.join(settings.GRAPHS_DIR, f'model_predictions.png'))

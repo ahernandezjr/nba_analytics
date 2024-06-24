@@ -1,9 +1,8 @@
-import os, sys
+import os
 import time
 import pandas as pd
 from basketball_reference_web_scraper import client
 
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 from ..utils.logger import get_logger
 
 DATA_DIR = 'data'

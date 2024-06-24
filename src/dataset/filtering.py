@@ -1,6 +1,4 @@
-import os, sys
 import pandas as pd
-import torch
 from sklearn.decomposition import PCA
 
 from ..utils.config import settings
