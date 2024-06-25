@@ -90,66 +90,6 @@ def get_num_samples():
     return num_samples
 
 
-# Create a bar graph showing feature importance
-def create_feature_importance_graph():
-    # https://machinelearningmastery.com/calculate-feature-importance-with-python/
-    # https://machinelearningmastery.com/feature-selection-machine-learning-python/
-    pass
-
-
-
-
-
-
-
-
-# Create 2-D PCA plot
-def create_pca_plot():
-    from sklearn.decomposition import PCA
-
-    # Get the number of samples
-    num_samples = get_num_samples()
-
-    # Get the number of features
-    num_features = get_num_features()
-
-    # Get the mean and standard deviation
-    X_mean, X_std, y_mean, y_std = get_mean_std()
-
-    # Get the min and max values
-    X_min, X_max, y_min, y_max = get_min_max()
-
-    # Create a PCA object
-    pca = PCA(n_components=2)
-
-    # Get the X and y values
-    X = np.array([nba_dataset[i][0] for i in range(len(nba_dataset))])
-
-    X = X[:, 0]
-
-    # Get size of a sample of X
-    size = X[0].size
-
-    # Reshape the X values to 2D array
-    X = np.reshape(X, (len(nba_dataset), size) )
-
-    # Fit the PCA object
-    X_pca = pca.fit_transform(X)
-
-    # Create a figure
-    fig, ax = plt.subplots(figsize=(10, 10))
-
-    # Plot the PCA values
-    ax.scatter(X_pca[:, 0], X_pca[:, 1])
-    ax.set_title('PCA Plot')
-
-    # Show the plot
-    plt.show()
-
-    # Save the plot to GRAPHS_DIR
-    fig.savefig(os.path.join(settings.GRAPHS_DIR, 'pca.png'))
-
-
 # Create graphs
 def create_data_graphs():
     # Get the number of samples
@@ -229,3 +169,8 @@ def create_prediction_graphs():
 
     # Save the plot to GRAPHS_DIR
     fig.savefig(os.path.join(settings.GRAPHS_DIR, f'model_predictions.png'))
+
+
+    # Create a line graph showing:
+    #   1. the average 5 year projections of someone's career,
+    #   2. the 5 year projects of piston players for all predictions.

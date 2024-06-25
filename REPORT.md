@@ -2,11 +2,11 @@
 
 ## Table of Contents
 
-- [Goals](#goals)
-- [Key Features](#key-features)
-- [Analytics](#analytics)
-- [Data Specifications](#data-specifications)
-- [Insights and Analysis](#insights-and-analysis)
+- [NBA Pistons Report](#nba-pistons-report)
+  - [Table of Contents](#table-of-contents)
+  - [Goals](#goals)
+  - [Key Features](#key-features)
+  - [Analytics](#analytics)
 
 ## Goals
 

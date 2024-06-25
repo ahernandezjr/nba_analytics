@@ -5,6 +5,7 @@ DATA_DIR = "data/"
 LOGS_DIR = 'logs/'
 MODELS_DIR = 'data/models/'
 GRAPHS_DIR = 'data/graphs/' 
+REPORTS_DIR = 'reports/'
 
 # File data names
 DATA_FILE_NAME = "data/nba_player_stats.csv"

@@ -54,11 +54,11 @@ The project directory is organized as follows:
 
 | Day       | Task       | Status |
 |-----------|------------|--------|
-| Monday    | Look into [`arima`](src/machine_learning/models/arima.py) and complete [`lstm`](src/machine_learning/models/lstm.py). **<br>**  | &#x2718; |
-| Tuesday   | Perform [`analytics`](src/dataset/analytics.py) for tasks and update [`REPORT.md`](REPORT.md). | &#x2718; |
-| Wednesday |  FILL | &#x2718; |
-| Thursday  | FILL | &#x2718; |
-| Friday    | FILL | &#x2718; |
+| Monday    |  Complete [`lstm`](src/machine_learning/models/lstm.py). **<br>** Look into [`REPORT.md`](REPORT.md) automation. | &#x2714; |
+| Tuesday   | Complete prediction graphs and create average prediction line graph in [`analytics`](src/dataset/analytics.py) for and update [`REPORT.md`](REPORT.md). **<br>** Continue automation of [`reports`](reports/). | &#x2718; |
+| Wednesday | Complete merge of  [`REPORT.md`](REPORT.md) into automated [`reports`](reports/). | &#x2718; |
+| Thursday  | **TO BE DECIDED** | &#x2718; |
+| Friday    | Look into [`arima`](src/machine_learning/models/arima.py). | &#x2718; |
 | Saturday  | **No Progress on Saturdays.** | --- |
 | Sunday    | (Prev) Complete [`nn`](src/machine_learning/models/nn.py) and prep [`use_models`](src/machine_learning/use_models.py) for [`analytics`](src/dataset/analytics.py). | &#x2714; |
 
