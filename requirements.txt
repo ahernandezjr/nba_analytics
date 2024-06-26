@@ -8,6 +8,7 @@ basketball_reference_web_scraper==4.14.0
 beautifulsoup4==4.12.3
 bleach==6.1.0
 certifi==2024.2.2
+chardet==5.2.0
 charset-normalizer==3.3.2
 colorama==0.4.6
 colorlog==6.8.2
@@ -79,6 +80,7 @@ pytz==2024.1
 pywin32==306
 pyzmq==26.0.3
 referencing==0.35.1
+reportlab==4.2.2
 requests==2.31.0
 rpds-py==0.18.1
 scikit-learn==1.5.0

@@ -1,4 +1,5 @@
 # NBA Pistons Report
+**PLEASE VIEW REPORTS FOR CURRENT REPORTS. <br> THIS IS HERE AS A TEMPORARY OPTION.**
 
 ## Table of Contents
 
