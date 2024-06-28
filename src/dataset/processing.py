@@ -274,7 +274,7 @@ def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
     # Save 3D numpy array to csv
     np.savetxt(DATA_FILE_5YEAR_OVERLAP, np_overlap, delimiter=',', fmt='%s')
     # np_overlap.to_csv(DATA_FILE_5YEAR_OVERLAP, index=False)
-
+    # np.savez(DATA_FILE_5YEAR_OVERLAP + '.npz', np_overlap)
     # Save dictionary to json
     df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
 

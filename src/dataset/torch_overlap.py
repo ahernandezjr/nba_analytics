@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import pandas as pd
 import torch
@@ -119,13 +121,13 @@ def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
     # df = pd.read_csv(df_filename).apply(pd.to_numeric, errors='coerce')
 
     # Load the numpy array with proper numeric types
-    np_overlap = np.loadtxt(np_overlap_filename, delimiter=",")
+    np_overlap = np.loadtxt(os.path.join(DATA_DIR, np_overlap_filename), delimiter=",")
 
     # Reshape the 2D numpy array to its original shape
     np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
     # Load the dictionary with proper numeric types
-    df_dict = pd.read_json(dict_filename, typ='series').to_dict()
+    df_dict = pd.read_json(os.path.join(DATA_DIR, dict_filename), typ='series').to_dict()
 
     # Create the dataset
     dataset = NBAPlayerDataset(np_overlap)

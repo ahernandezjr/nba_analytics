@@ -1,5 +1,6 @@
 import os, sys
 
+import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
@@ -8,7 +9,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
-from ..dataset.torch import NBAPlayerDataset, get_dataset_example
+from ..dataset.torch_overlap import NBAPlayerDataset, get_dataset_example
 
 from .train_models import get_model
 
@@ -26,20 +27,28 @@ MODELS_DIR = settings.MODELS_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
+DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
+FILTER_AMT = settings.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the dataset from the tensor file
-df = pd.read_csv(DATA_FILE_5YEAR_TENSOR_NAME)
+df = pd.read_csv(os.path.join(DATA_DIR, DATA_FILE_5YEAR_TENSOR_NAME))
+
+# Load the numpy array with proper numeric types
+np_overlap = np.loadtxt(os.path.join(DATA_DIR, DATA_FILE_5YEAR_OVERLAP), delimiter=",")
+
+# Reshape the 2D numpy array to its original shape
+np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
 # Load the dictionary with proper numeric types
-df_dict = pd.read_json(DATA_FILE_5YEAR_JSON_NAME, typ='series').to_dict()
+df_dict = pd.read_json(os.path.join(DATA_DIR, DATA_FILE_5YEAR_JSON_NAME), typ='series').to_dict()
 
 # Instantiate the dataset
-nba_dataset = NBAPlayerDataset(df)
+nba_dataset = NBAPlayerDataset(np_overlap)
 
 # Create a training DataLoader and test DataLoader
 train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)
@@ -129,63 +138,74 @@ def use_model(file_index=None):
         logger.error(f'No .pth files in {MODELS_DIR}. Exiting...')
         sys.exit(1)
 
-    if file_index == -1:
+    if file_index <= -1:
         load_index = 0
+        logger.info(f'Using all indices ({file_index} given).')
+    # Prompt user to select a .pth file if none is given
+    elif file_index is None:
+        load_index = prompt_user(pth_files)
+        logger.info(f'Using prompted file index {load_index}.')
+    else:
+        load_index = file_index
+        logger.info(f'Using argument file index {load_index}.')
 
     for f in os.listdir(MODELS_DIR):
-        # Prompt user to select a .pth file if none is given
-        if file_index is None:
-            load_index = prompt_user(pth_files)
-            logger.info(f'Using prompted file index {load_index}.')
-        else:
-            load_index = file_index
-            logger.info(f'Using argument file index {load_index}.')
-
         model = load_model(pth_files, load_index)
-
         model = model.to(device)
 
-        dataset_index = 0
-        inputs, targets = get_dataset_example(dataset_index)
-
-        inputs = inputs.float()
-        targets = targets.float()
-        
-        inputs = inputs.to(device)
-        targets = targets.to(device)
-
-        outputs = None
-        if model.name == 'nn_lstm':
-            outputs = model.forward(inputs)[0]
-            outputs = outputs[0]
-        elif model.name == 'nn_one_to_one':
-            inputs = inputs[0]
-            outputs = model.forward(inputs)
-        elif model.name == 'nn_many_to_one':
-            inputs = inputs[:-1].view(inputs.shape[0], -1)
-            outputs = model.forward(inputs)
-        else:
-            outputs = model.forward(inputs)
-        
-        inputs = inputs.detach().cpu().numpy()
-        outputs = outputs.detach().cpu().numpy()
-
-        # Test the model on player_data
         all_models.append(model.name)
-        all_inputs.append(inputs)
-        all_outputs.append(outputs)
 
-        logger.info("Model Results:")
-        logger.info(f"Inputs: {inputs}")
-        logger.info(f"Outputs: {outputs}")
-        logger.info(f"Targets: {targets}")
+        model_inputs = []
+        model_outputs = []
+
+        # Iterate through entire dataset
+        for inputs, _ in nba_dataset:
+            # dataset_index = 0
+            # inputs, targets = get_dataset_example(dataset_index)
+
+            inputs = inputs.float()
+            # targets = targets.float()
+            
+            inputs = inputs.to(device)
+            # targets = targets.to(device)
+
+            input_0 = inputs[0]
+            outputs = None
+            if model.name == 'nn_lstm':
+                outputs = model.forward(inputs)[0]
+                outputs = outputs[0]
+            elif model.name == 'nn_one_to_one':
+                inputs = inputs[0]
+                outputs = model.forward(inputs)
+            elif model.name == 'nn_many_to_one':
+                inputs_copy = inputs
+                inputs = inputs[:-1].view(-1)
+                outputs = model.forward(inputs)
+            else:
+                outputs = model.forward(inputs)
+            
+            input_0 = input_0.detach().cpu().numpy()
+            inputs = inputs.detach().cpu().numpy()
+            outputs = outputs.detach().cpu().numpy()
+
+            # Test the model on player_data
+            model_inputs.append(input_0)
+            model_outputs.append(outputs)
+
+        all_inputs.append(model_inputs)
+        all_outputs.append(model_outputs)
+
+        logger.info(f"Model {model.name} Results Example:")
+        logger.info(f"Inputs: {all_inputs[0]}")
+        logger.info(f"Outputs: {all_outputs[0]}")
+        # logger.info(f"Targets: {targets}")
 
         # logger.info(f"De-scaled Inputs: {nba_dataset.inverse_fit_scaler(inputs.detach().cpu().numpy())}")
         # logger.info(f"De-scaled Outputs: {nba_dataset.inverse_fit_scaler(outputs[0].detach().cpu().numpy())}")
-        
+            
         load_index += 1
         if file_index != -1:
-            return all_models, inputs, outputs
+            return all_models, model_inputs, model_outputs
         
     return all_models, all_inputs, all_outputs
         
