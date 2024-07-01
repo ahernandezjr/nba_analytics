@@ -62,17 +62,19 @@ The project directory is organized as follows:
 - **requirements.txt**: File containing project dependencies.
 - **reference**: Any other files related to the project used for referencing.
 
-## Work/To-Do Schedule
+## Work/To-Do Schedule **(Week of 6/24)**
+**Currently continuing with learning from Sunday-Week6/24 Task.**
 
-| Day       | Task                                                                                                                                                                              | Status   |
-| --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
-| Monday    | Complete [`lstm`](src/machine_learning/models/lstm.py). **<br>** Look into [`REPORT.md`](REPORT.md) automation.                                                                   | &#x2714; |
-| Tuesday   | Complete automation of [`reports`](reports/).                                                                                                                                     | &#x2714; |
-| Wednesday | Look into Databricks implementation. Begin PowerBI testing.                                                                                                                       | &#x2714; |
-| Thursday  | Modify [`use_models.py`](src/machine_learning/use_models.py) use_model() for model prediction output.                                                                             | &#x2714; |
+| Day       | Task | Status |
+| --------- | --------- | --------- |
+| Monday    | Complete [`lstm`](src/machine_learning/models/lstm.py). **<br>** Look into [`REPORT.md`](REPORT.md) automation. | &#x2714; |
+| Tuesday   | Complete automation of [`reports`](reports/). | &#x2714; |
+| Wednesday | Look into Databricks implementation. Begin PowerBI testing. | &#x2714; |
+| Thursday  | Modify [`use_models.py`](src/machine_learning/use_models.py) use_model() for model prediction output. | &#x2714; |
 | Friday    | Complete prediction graphs and create average prediction bar graph in [`analytics`](src/dataset/analytics.py). **<br>** Look into PowerBI use cases over weekend and plan report. | &#x2714; |
-| Saturday  | **N/A: No Progress on Saturdays.**                                                                                                                                                | ---      |
-| Sunday    | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. Continue experimenting with PowerBI reports dashboard.                       | &#x2718; |
+| Saturday  | **N/A: No Progress on Saturdays.** | --- |
+| Sunday    | Begin including Azure/Fabric/PowerBI for data organization, engineering, and reports. | &#x2714; |
+| **UNSCHEDULED** | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. | --- |
 
 ## Contributors
 
