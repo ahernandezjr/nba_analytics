@@ -1,7 +1,8 @@
 settings_file_name = "settings.toml"
 
 # File data locations
-DATA_DIR = "data/datasets/"
+DATA_DIR = "data/"
+DATASET_DIR = "data/datasets/"
 LOGS_DIR = 'logs/'
 MODELS_DIR = 'data/models/'
 GRAPHS_DIR = 'data/graphs/' 

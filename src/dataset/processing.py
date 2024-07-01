@@ -8,7 +8,7 @@ from ..utils.logger import get_logger
 
 
 # Set configs from settings
-DATA_DIR = settings.DATA_DIR
+DATASET_DIR = settings.DATASET_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
@@ -262,9 +262,9 @@ def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
     logger.debug(f"Saving dataset to '{DATA_FILE_5YEAR_NAME}'...")
 
     # Create df filename
-    # filename_df = os.path.join(DATA_DIR, f"{filename}.csv")
+    # filename_df = os.path.join(DATASET_DIR, f"{filename}.csv")
     # Create df_dict filename
-    # filename_dict = filename_df = os.path.join(DATA_DIR, f"{filename}.json")
+    # filename_dict = filename_df = os.path.join(DATASET_DIR, f"{filename}.json")
 
 
     # Save the filtered dataset and dictionary to a csv and json file

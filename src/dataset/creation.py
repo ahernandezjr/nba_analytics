@@ -5,12 +5,12 @@ from basketball_reference_web_scraper import client
 
 from ..utils.logger import get_logger
 
-DATA_DIR = 'data'
+DATASET_DIR = 'data'
 LOGS_DIR = 'logs'
-PLAYERS_CSV_PATH = os.path.join(DATA_DIR, 'nba_players.csv')
-PLAYERSTATS_CSV_PATH = os.path.join(DATA_DIR, 'nba_player_stats.csv')
-PLAYERS_CSV_PATH_BASIC = os.path.join(DATA_DIR, 'nba_players_basic.csv')
-PLAYERS_CSV_PATH_ADVANCED = os.path.join(DATA_DIR, 'nba_players_advanced.csv')
+PLAYERS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_players.csv')
+PLAYERSTATS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_player_stats.csv')
+PLAYERS_CSV_PATH_BASIC = os.path.join(DATASET_DIR, 'nba_players_basic.csv')
+PLAYERS_CSV_PATH_ADVANCED = os.path.join(DATASET_DIR, 'nba_players_advanced.csv')
 LOG_FILE = os.path.join(LOGS_DIR, 'nba_player_stats.log')
 
 BATCH_SIZE = 100
@@ -20,7 +20,7 @@ YEARS_BACK = 12
 logger = get_logger(__name__)
 
 def create_directories():
-    for directory in [DATA_DIR, LOGS_DIR]:
+    for directory in [DATASET_DIR, LOGS_DIR]:
         os.makedirs(directory, exist_ok=True)
 
 def update_players_csv(file_path_basic, file_path_advanced, year):

@@ -1,0 +1,5 @@
+# Set Azure/Fabric credientials per user
+DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
+DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'
+DATALAKE_FILESYSTEM_NAME = 'your_datalake_filesystem_name'
+DATALAKE_DIRECTORY_PATH = '/path/to/datalake_directory'

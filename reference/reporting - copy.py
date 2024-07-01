@@ -7,7 +7,7 @@ import os
 # Assuming settings are similar to those in reporting.py
 from .config import settings
 
-DATA_DIR = settings.DATA_DIR
+DATASET_DIR = settings.DATASET_DIR
 GRAPHS_DIR = settings.GRAPHS_DIR
 REPORTS_DIR = settings.REPORTS_DIR
 

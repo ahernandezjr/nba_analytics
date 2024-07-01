@@ -20,9 +20,8 @@ from ..utils.logger import get_logger
 # Create logger
 logger = get_logger(__name__)
 
-
 # Set configs from settings
-DATA_DIR = settings.DATA_DIR
+DATASET_DIR = settings.DATASET_DIR
 MODELS_DIR = settings.MODELS_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
@@ -30,22 +29,23 @@ DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
 DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
 DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
+
 FILTER_AMT = settings.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the dataset from the tensor file
-df = pd.read_csv(os.path.join(DATA_DIR, DATA_FILE_5YEAR_TENSOR_NAME))
+df = pd.read_csv(os.path.join(DATASET_DIR, DATA_FILE_5YEAR_TENSOR_NAME))
 
 # Load the numpy array with proper numeric types
-np_overlap = np.loadtxt(os.path.join(DATA_DIR, DATA_FILE_5YEAR_OVERLAP), delimiter=",")
+np_overlap = np.loadtxt(os.path.join(DATASET_DIR, DATA_FILE_5YEAR_OVERLAP), delimiter=",")
 
 # Reshape the 2D numpy array to its original shape
 np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
 # Load the dictionary with proper numeric types
-df_dict = pd.read_json(os.path.join(DATA_DIR, DATA_FILE_5YEAR_JSON_NAME), typ='series').to_dict()
+df_dict = pd.read_json(os.path.join(DATASET_DIR, DATA_FILE_5YEAR_JSON_NAME), typ='series').to_dict()
 
 # Instantiate the dataset
 nba_dataset = NBAPlayerDataset(np_overlap)

@@ -6,7 +6,7 @@ from ..utils.logger import get_logger
 
 
 # Set configs from settings
-DATA_DIR = settings.DATA_DIR
+DATASET_DIR = settings.DATASET_DIR
 DATA_FILE_NAME = settings.DATA_FILE_NAME
 DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
 DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME

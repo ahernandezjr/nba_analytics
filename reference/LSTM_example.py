@@ -154,7 +154,7 @@ TEST CODE
 # nba_dataset = NBAPlayerDataset(DATA_FILE_5YEAR_NAME, DATA_FILE_5YEAR_JSON_NAME)
 
 # # Create a training loop for pytorch NBA dataset
-# df = pd.read_csv(os.path.join(DATA_DIR, DATA_FILE_NAME))
+# df = pd.read_csv(os.path.join(DATASET_DIR, DATA_FILE_NAME))
 # X, y = df.drop(columns=['Close']), df.Close.values
 
 # scaler_X = StandardScaler()

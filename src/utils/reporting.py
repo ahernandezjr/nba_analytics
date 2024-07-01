@@ -15,7 +15,7 @@ import os
 logger = get_logger(__name__)
 
 # Set configs from settings
-DATA_DIR = settings.DATA_DIR
+DATASET_DIR = settings.DATASET_DIR
 GRAPHS_DIR = settings.GRAPHS_DIR
 REPORTS_DIR = settings.REPORTS_DIR
 
@@ -263,8 +263,8 @@ def create_report():
     today = time.strftime("%Y-%m-%d")
 
     # If report directory does not exist, create it
-    if not os.path.exists(os.path.join(DATA_DIR, "reports")):
-        os.makedirs(os.path.join(DATA_DIR, "reports"))
+    if not os.path.exists(os.path.join(DATASET_DIR, "reports")):
+        os.makedirs(os.path.join(DATASET_DIR, "reports"))
     # Generate the PDF
     # pdf.output(os.path.join(REPORTS_DIR, f"EXAMPLE_{today}_report.pdf"), 'F')
     pdf.output(os.path.join(REPORTS_DIR, f"{today}_report.pdf"), 'F')
