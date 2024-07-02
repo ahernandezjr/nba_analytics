@@ -160,6 +160,11 @@ cython_debug/
 #.idea/
 
 # Data files
-*.csv
-*.json
-*.pth
+# *.csv
+# *.json
+# *.pth
+
+# Reference files
+reference/**/*.csv
+reference/**/*.json
+reference/**/*.pth
