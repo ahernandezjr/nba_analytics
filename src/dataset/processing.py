@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 
@@ -9,11 +10,11 @@ from ..utils.logger import get_logger
 
 # Set configs from settings
 DATASET_DIR = settings.DATASET_DIR
-DATA_FILE_NAME = settings.DATA_FILE_NAME
-DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
-DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
-DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
-DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
+DATA_FILE = os.path.join(DATASET_DIR, settings.DATA_FILE_NAME)
+DATA_FILE_5YEAR = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_NAME)
+DATA_FILE_5YEAR_TENSOR = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_TENSOR_NAME)
+DATA_FILE_5YEAR_OVERLAP = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_OVERLAP)
+DATA_FILE_5YEAR_JSON = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_JSON_NAME)
 
 FILTER_AMT = settings.FILTER_AMT
 
@@ -259,7 +260,7 @@ def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
     Returns:
         None
     """
-    logger.debug(f"Saving dataset to '{DATA_FILE_5YEAR_NAME}'...")
+    logger.debug(f"Saving dataset to '{DATA_FILE_5YEAR}'...")
 
     # Create df filename
     # filename_df = os.path.join(DATASET_DIR, f"{filename}.csv")
@@ -269,24 +270,24 @@ def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
 
     # Save the filtered dataset and dictionary to a csv and json file
     # df1.to_csv(DATA_FILE_5YEAR_NAME, index=False)
-    df_tensor_ready.to_csv(DATA_FILE_5YEAR_TENSOR_NAME, index=False)
+    df_tensor_ready.to_csv(DATA_FILE_5YEAR_TENSOR, index=False)
 
     # Save 3D numpy array to csv
     np.savetxt(DATA_FILE_5YEAR_OVERLAP, np_overlap, delimiter=',', fmt='%s')
     # np_overlap.to_csv(DATA_FILE_5YEAR_OVERLAP, index=False)
     # np.savez(DATA_FILE_5YEAR_OVERLAP + '.npz', np_overlap)
     # Save dictionary to json
-    df_dict.to_json(DATA_FILE_5YEAR_JSON_NAME, indent=4)
+    df_dict.to_json(DATA_FILE_5YEAR_JSON, indent=4)
 
     # logger.debug(f"Filtered dataset saved to: '{DATA_FILE_5YEAR_NAME}'.")
-    logger.debug(f"Tensor-ready dataset saved to: '{DATA_FILE_5YEAR_TENSOR_NAME}'.")
+    logger.debug(f"Tensor-ready dataset saved to: '{DATA_FILE_5YEAR_TENSOR}'.")
     logger.debug(f"Overlap dataset saved to: '{DATA_FILE_5YEAR_OVERLAP}'.")
-    logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON_NAME}'.")
+    logger.debug(f"Filtered dictionary saved to: '{DATA_FILE_5YEAR_JSON}'.")
 
 
 def run_processing():
     # Load the data
-    df = pd.read_csv('data/nba_player_stats.csv')
+    df = pd.read_csv(DATA_FILE)
 
     # Create a dataframe of players who have played for more than 5 years
     df_tensor_ready, np_overlap, dict_df = filter_5Year_dataset(df)
