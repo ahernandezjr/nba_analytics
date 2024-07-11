@@ -64,13 +64,32 @@ The project directory is organized as follows:
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Set up Azure Resource Group. <br> Create Python Azure Function for data collection. | &#x2718; |
-  | Tuesday   | Create Azure Data Factory. <br> Set up linked services and define ETL pipelines. | &#x2718; |
-  | Wednesday | Create Azure Machine Learning Workspace. <br> Set up machine learning environment and upload datasets. | &#x2718; |
-  | Thursday  | Train models using Azure Machine Learning. <br> Deploy models as web services. | &#x2718; |
-  | Friday    | Integrate with Azure Blob Storage for data storage. <br> Update scripts to use Azure Blob Storage SDK. | &#x2718; |
+  | Monday    | Set up Azure. | &#x2714; |
+  | Tuesday   | Research ways to implement ETL. | &#x2714; |
+  | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2714; |
+  | Thursday  | Complete the module setup and begin the function input pipeline. | &#x2716; |
+  | Friday    | Set up the data factory for bronze, silver, gold data layers. | &#x2716; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
-  | Sunday    | Integrate with Power BI for visualization and reporting. <br> Automate workflow using Azure Logic Apps or Azure DevOps. | &#x2718; |
+  | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
+
+
+</details>
+
+</details>
+  <summary>To Dos </summary>
+
+  | Task | Description |
+  | ---- | ----------- |
+  | Set up linked services and define ETL pipelines. | Critical for data transformation. |
+  | Create Azure Machine Learning Workspace. | Foundation for machine learning projects. |
+  | Set up machine learning environment and upload datasets. | Necessary for model training. |
+  | Train models using Azure Machine Learning. | Key for predictive analytics. |
+  | Deploy models as web services. | For model accessibility. |
+  | Integrate with Azure Blob Storage for data storage. | For data persistence. |
+  | Update scripts to use Azure Blob Storage SDK. | To leverage Azure storage capabilities. |
+  | Automate workflow using Azure Logic Apps or Azure DevOps. | For streamlined operations. |
+  | Finish setting up the Data Factory and integrate with Databricks. | For enhanced data processing and analytics, added for Sunday. |
+  | Before Azure Machine Learning Tasks. | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. |
 
 </details>
 
@@ -110,16 +129,6 @@ The project directory is organized as follows:
   | Friday    | Create many(4)-to-one and one-to-one neural networks. | &#x2714; |
   | Saturday  | No Progress on Saturdays. <br> Meanwhile: Re-think dataset names for dataset. | --- |
   | Sunday    | Re-check and complete neural networks and start ARIMA preparation in `use_models`. <br> Perform analytics for tasks and update `REPORT.md`. | &#x2714; |
-
-</details>
-
-
-<details>
-  <summary>Extra Tasks</summary>
-
-  | By When | Task | Status |
-  | --------- | --------- | --------- |
-  | Before Azure Machine Learning Tasks | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. | &#x2718; |
 
 </details>
 
