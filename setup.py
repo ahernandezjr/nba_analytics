@@ -9,18 +9,15 @@ with open('requirements.txt') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='nba_pistons',
-    version='0.2.0',
+    name='nba_analytics',
+    version='0.2.2',
     author='Alexander Hernandez',
     author_email='ahernandezjr0@gmail.com',
     description='A package for collecting and analyzing NBA player data.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/ahernandezjr/nba_pistons',
-    packages=find_packages(
-        where='src',
-        include=['*'],
-    ),
+    url='https://github.com/ahernandezjr/nba_analytics',
+    packages=find_packages(where='src', include=['nba_analytics', 'nba_analytics.*']),
     package_dir={"": "src"},
     install_requires=requirements,
     classifiers=[
