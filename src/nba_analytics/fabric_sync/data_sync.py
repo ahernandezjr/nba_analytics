@@ -77,7 +77,7 @@ def upload_file_to_directory(directory_client: DataLakeDirectoryClient, local_pa
     file_client = directory_client.get_file_client(file_name)
     logger.info(f"File client: {file_client}")
 
-    with open(file=os.path.join(local_path, file_name), mode="rb") as data:
+    with open(file=os.path.join(os.getcwd(), local_path, file_name), mode="rb") as data:
         file_client.upload_data(data, overwrite=True)
 
 

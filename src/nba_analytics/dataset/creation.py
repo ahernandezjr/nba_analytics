@@ -9,11 +9,11 @@ from ..utils.logger import get_logger
 
 DATASET_DIR = settings.DATASET_DIR
 LOGS_DIR = settings.LOGS_DIR
-PLAYERS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_players.csv')
-PLAYERSTATS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_player_stats.csv')
-PLAYERS_CSV_PATH_BASIC = os.path.join(DATASET_DIR, 'nba_players_basic.csv')
-PLAYERS_CSV_PATH_ADVANCED = os.path.join(DATASET_DIR, 'nba_players_advanced.csv')
-LOG_FILE = os.path.join(LOGS_DIR, 'nba_player_stats.log')
+PLAYERS_CSV_PATH = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players.csv')
+PLAYERSTATS_CSV_PATH = os.path.join(os.getcwd(), DATASET_DIR, 'nba_player_stats.csv')
+PLAYERS_CSV_PATH_BASIC = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_basic.csv')
+PLAYERS_CSV_PATH_ADVANCED = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_advanced.csv')
+LOG_FILE = os.path.join(os.getcwd(), LOGS_DIR, 'nba_player_stats.log')
 
 BATCH_SIZE = 100
 RETRY_DELAY = 60

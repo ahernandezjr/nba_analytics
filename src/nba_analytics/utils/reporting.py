@@ -40,7 +40,7 @@ class PDF(FPDF):
 
 
 def create_letterhead(pdf, WIDTH):
-    pdf.image(os.path.join(REPORTS_DIR, "extra_files", "letterhead.png"), 0, 0, WIDTH)
+    pdf.image(os.path.join(os.getcwd(), REPORTS_DIR, "extra_files", "letterhead.png"), 0, 0, WIDTH)
     pdf.ln(25)
 
 
@@ -85,10 +85,10 @@ def generate_commits_png():
     # To do: show full commit message
 
     # If the extra_files directory does not exist, create it
-    if not os.path.exists(os.path.join(REPORTS_DIR, "extra_files")):
-        os.makedirs(os.path.join(REPORTS_DIR, "extra_files"))
+    if not os.path.exists(os.path.join(os.getcwd(), REPORTS_DIR, "extra_files")):
+        os.makedirs(os.path.join(os.getcwd(), REPORTS_DIR, "extra_files"))
     
-    dfi.export(commit_data, os.path.join(REPORTS_DIR, "extra_files", "commits.png"))
+    dfi.export(commit_data, os.path.join(os.getcwd(), REPORTS_DIR, "extra_files", "commits.png"))
 
 
 def create_cover(pdf, title, date, text):
@@ -211,15 +211,15 @@ def create_report():
     write_to_pdf(pdf, "1. The graph below demonstates the basic analytics of the NBA dataset:")
 
     # Add the generated visualisations to the PDF
-    create_image(pdf, os.path.join(GRAPHS_DIR, "analytics.png"))
+    create_image(pdf, os.path.join(os.getcwd(), GRAPHS_DIR, "analytics.png"))
     pdf.ln(10)
 
     # First page content text
     write_to_pdf(pdf, "2. The visualisations below show model prediction comparisons:")
 
     # Add the generated visualisations to the PDF
-    create_image(pdf, os.path.join(GRAPHS_DIR, "model_predictions.png"))
-    # pdf.image(os.path.join(GRAPHS_DIR, "pca.png"), WIDTH/2, 200, WIDTH/2-10)
+    create_image(pdf, os.path.join(os.getcwd(), GRAPHS_DIR, "model_predictions.png"))
+    # pdf.image(os.path.join(os.getcwd(), GRAPHS_DIR, "pca.png"), WIDTH/2, 200, WIDTH/2-10)
     pdf.ln(10)
 
 
@@ -235,7 +235,7 @@ def create_report():
     write_to_pdf(pdf, "3. The graphs below show further analysis via PCA, showing dataset sample relationships.")
 
     # Add the generated visualisations to the PDF
-    create_image(pdf, os.path.join(GRAPHS_DIR, "pca.png"))
+    create_image(pdf, os.path.join(os.getcwd(), GRAPHS_DIR, "pca.png"))
 
     '''
     Third Page of PDF
@@ -255,7 +255,7 @@ def create_report():
     generate_commits_png()
 
     # Add the table to the PDF
-    create_image(pdf, os.path.join(REPORTS_DIR, "extra_files", "commits.png"))
+    create_image(pdf, os.path.join(os.getcwd(), REPORTS_DIR, "extra_files", "commits.png"))
     pdf.ln(10)
 
 
@@ -263,11 +263,11 @@ def create_report():
     today = time.strftime("%Y-%m-%d")
 
     # If report directory does not exist, create it
-    if not os.path.exists(os.path.join(DATASET_DIR, "reports")):
-        os.makedirs(os.path.join(DATASET_DIR, "reports"))
+    if not os.path.exists(os.path.join(os.getcwd(), DATASET_DIR, "reports")):
+        os.makedirs(os.path.join(os.getcwd(), DATASET_DIR, "reports"))
     # Generate the PDF
-    # pdf.output(os.path.join(REPORTS_DIR, f"EXAMPLE_{today}_report.pdf"), 'F')
-    pdf.output(os.path.join(REPORTS_DIR, f"{today}_report.pdf"), 'F')
+    # pdf.output(os.path.join(os.getcwd(), REPORTS_DIR, f"EXAMPLE_{today}_report.pdf"), 'F')
+    pdf.output(os.path.join(os.getcwd(), REPORTS_DIR, f"{today}_report.pdf"), 'F')
 
 
 if __name__ == "__main__":

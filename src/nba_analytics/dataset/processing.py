@@ -10,11 +10,11 @@ from ..utils.logger import get_logger
 
 # Set configs from settings
 DATASET_DIR = settings.DATASET_DIR
-DATA_FILE = os.path.join(DATASET_DIR, settings.DATA_FILE_NAME)
-DATA_FILE_5YEAR = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_NAME)
-DATA_FILE_5YEAR_TENSOR = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_TENSOR_NAME)
-DATA_FILE_5YEAR_OVERLAP = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_OVERLAP)
-DATA_FILE_5YEAR_JSON = os.path.join(DATASET_DIR, settings.DATA_FILE_5YEAR_JSON_NAME)
+DATA_FILE = os.path.join(os.getcwd(), DATASET_DIR, settings.DATA_FILE_NAME)
+DATA_FILE_5YEAR = os.path.join(os.getcwd(), DATASET_DIR, settings.DATA_FILE_5YEAR_NAME)
+DATA_FILE_5YEAR_TENSOR = os.path.join(os.getcwd(), DATASET_DIR, settings.DATA_FILE_5YEAR_TENSOR_NAME)
+DATA_FILE_5YEAR_OVERLAP = os.path.join(os.getcwd(), DATASET_DIR, settings.DATA_FILE_5YEAR_OVERLAP)
+DATA_FILE_5YEAR_JSON = os.path.join(os.getcwd(), DATASET_DIR, settings.DATA_FILE_5YEAR_JSON_NAME)
 
 FILTER_AMT = settings.FILTER_AMT
 
@@ -263,9 +263,9 @@ def save_df_and_dict(df_tensor_ready, np_overlap, df_dict):
     logger.debug(f"Saving dataset to '{DATA_FILE_5YEAR}'...")
 
     # Create df filename
-    # filename_df = os.path.join(DATASET_DIR, f"{filename}.csv")
+    # filename_df = os.path.join(os.getcwd(), DATASET_DIR, f"{filename}.csv")
     # Create df_dict filename
-    # filename_dict = filename_df = os.path.join(DATASET_DIR, f"{filename}.json")
+    # filename_dict = filename_df = os.path.join(os.getcwd(), DATASET_DIR, f"{filename}.json")
 
 
     # Save the filtered dataset and dictionary to a csv and json file

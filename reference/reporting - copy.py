@@ -15,7 +15,7 @@ TITLE = "Weekly Analytics Report"
 WIDTH = 210 * mm
 
 def create_letterhead(c, width):
-    c.drawImage(os.path.join(REPORTS_DIR, "letterhead.png"), 0, 0, width=width, preserveAspectRatio=True)
+    c.drawImage(os.path.join(os.getcwd(), REPORTS_DIR, "letterhead.png"), 0, 0, width=width, preserveAspectRatio=True)
 
 
 def create_title(c, title):
@@ -57,7 +57,7 @@ def footer(canvas):
 
 
 def create_report():
-    c = canvas.Canvas(os.path.join(REPORTS_DIR, "EXAMPLE_report.pdf"), pagesize=A4)
+    c = canvas.Canvas(os.path.join(os.getcwd(), REPORTS_DIR, "EXAMPLE_report.pdf"), pagesize=A4)
     c.setAuthor("Your Name")
     
     # Introduction Page
@@ -67,7 +67,7 @@ def create_report():
     # Add more sections as needed
     
     # Adding an image
-    analytics_image_path = os.path.join(GRAPHS_DIR, "analytics.png")
+    analytics_image_path = os.path.join(os.getcwd(), GRAPHS_DIR, "analytics.png")
     add_image(c, analytics_image_path)
     
     # Ensure to call showPage() to add a new page
@@ -128,15 +128,15 @@ def create_report():
     write_to_pdf(c, "1. The graph below demonstates the basic analytics of the NBA dataset:")
 
     # Add table
-    c.image(os.path.join(GRAPHS_DIR, "analytics.png"), w=170)
+    c.image(os.path.join(os.getcwd(), GRAPHS_DIR, "analytics.png"), w=170)
     c.ln(10)
 
     # First page content text
     write_to_pdf(c, "2. The visualisations below show model prediction comparisons:")
 
     # Add the generated visualisations to the PDF
-    c.image(os.path.join(GRAPHS_DIR, "model_predictions.png"), 5, 200, WIDTH/2-10)
-    # pdf.image(os.path.join(GRAPHS_DIR, "pca.png"), WIDTH/2, 200, WIDTH/2-10)
+    c.image(os.path.join(os.getcwd(), GRAPHS_DIR, "model_predictions.png"), 5, 200, WIDTH/2-10)
+    # pdf.image(os.path.join(os.getcwd(), GRAPHS_DIR, "pca.png"), WIDTH/2, 200, WIDTH/2-10)
     c.ln(10)
 
     # Footer

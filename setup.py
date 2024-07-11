@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='nba_analytics',
-    version='0.2.2',
+    version='0.2.3',
     author='Alexander Hernandez',
     author_email='ahernandezjr0@gmail.com',
     description='A package for collecting and analyzing NBA player data.',
@@ -19,6 +19,9 @@ setup(
     url='https://github.com/ahernandezjr/nba_analytics',
     packages=find_packages(where='src', include=['nba_analytics', 'nba_analytics.*']),
     package_dir={"": "src"},
+    package_data={
+        'nba_analytics': ['config/*.toml'],
+    },
     install_requires=requirements,
     classifiers=[
         'Programming Language :: Python :: 3',

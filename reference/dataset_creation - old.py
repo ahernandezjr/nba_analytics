@@ -8,18 +8,18 @@ from basketball_reference_web_scraper import client
 from basketball_reference_web_scraper.data import OutputType
 
 # Add parent directory to the sys.path to enable importing from sibling modules
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..', '..')))
 from src.utils.logger import logger  # Importing logger from sibling module
 
 # Constants
 DATASET_DIR = 'data'
 LOGS_DIR = 'logs'
-PLAYERS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_players.csv')
-PLAYERSTATS_CSV_PATH = os.path.join(DATASET_DIR, 'nba_player_stats.csv')
+PLAYERS_CSV_PATH = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players.csv')
+PLAYERSTATS_CSV_PATH = os.path.join(os.getcwd(), DATASET_DIR, 'nba_player_stats.csv')
 # Define file paths for basic and advanced player data
-PLAYERS_CSV_PATH_BASIC = os.path.join(DATASET_DIR, 'nba_players_basic.csv')
-PLAYERS_CSV_PATH_ADVANCED = os.path.join(DATASET_DIR, 'nba_players_advanced.csv')
-LOG_FILE = os.path.join(LOGS_DIR, 'nba_player_stats.log')
+PLAYERS_CSV_PATH_BASIC = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_basic.csv')
+PLAYERS_CSV_PATH_ADVANCED = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_advanced.csv')
+LOG_FILE = os.path.join(os.getcwd(), LOGS_DIR, 'nba_player_stats.log')
 
 BATCH_SIZE = 100
 RETRY_DELAY = 60  # Delay in seconds before retrying after rate limit exceeded
@@ -122,9 +122,9 @@ def merge_player_data(file_path_basic, file_path_advanced, output_file_path):
 
 # # Define file paths for basic and advanced player data
 # DATASET_DIR = "data"
-# PLAYERS_CSV_PATH_BASIC = os.path.join(DATASET_DIR, 'nba_players_basic.csv')
-# PLAYERS_CSV_PATH_ADVANCED = os.path.join(DATASET_DIR, 'nba_players_advanced.csv')
-# PLAYERSTATS_CSV_PATH = os.path.join(DATASET_DIR, 'merged_player_stats.csv')
+# PLAYERS_CSV_PATH_BASIC = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_basic.csv')
+# PLAYERS_CSV_PATH_ADVANCED = os.path.join(os.getcwd(), DATASET_DIR, 'nba_players_advanced.csv')
+# PLAYERSTATS_CSV_PATH = os.path.join(os.getcwd(), DATASET_DIR, 'merged_player_stats.csv')
 
 # Create directories if they don't exist
 for directory in [DATASET_DIR, LOGS_DIR]:
