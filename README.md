@@ -60,22 +60,21 @@ The project directory is organized as follows:
 # Work Schedule
 
 <details open>
-  <summary>Week of 7/8</summary>
+  <summary>Week of 7/15</summary>
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
   | Monday    | Set up Azure. | &#x2714; |
-  | Tuesday   | Research ways to implement ETL. | &#x2714; |
-  | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2714; |
+  | Tuesday   | Research ways to implement ETL. | &#x2716; |
+  | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2716; |
   | Thursday  | Complete the module setup and begin the function input pipeline. | &#x2716; |
   | Friday    | Set up the data factory for bronze, silver, gold data layers. | &#x2716; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
   | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
 
-
 </details>
 
-</details>
+<details>
   <summary>To Dos </summary>
 
   | Task | Description |
@@ -90,6 +89,31 @@ The project directory is organized as follows:
   | Automate workflow using Azure Logic Apps or Azure DevOps. | For streamlined operations. |
   | Finish setting up the Data Factory and integrate with Databricks. | For enhanced data processing and analytics, added for Sunday. |
   | Before Azure Machine Learning Tasks. | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. |
+
+</details>
+
+<details>
+  <summary>Week of 7/8</summary>
+
+  | Day       | Task | Status |
+  | --------- | --------- | --------- |
+  | Monday    | Continued package integration and SQL setup. | &#x2714; |
+  | Tuesday   | Complete module [`azure`](src/nba_analytics/cloud/azure) package. | &#x2716; |
+  | Wednesday | Complete SQL -> Data Factory pipeline on Azure. | &#x2716; |
+  | Thursday  | Wednesday task completion dependant. | &#x2716; |
+  | Friday    | Wednesday task completion dependant. | &#x2716; |
+  | Saturday  | **N/A: No Progress on Saturdays.** | --- |
+  | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
+
+  | Day       | Task | Status |
+  | --------- | --------- | --------- |
+  | Monday    | Set up Azure. | &#x2714; |
+  | Tuesday   | Research ways to implement ETL. | &#x2714; |
+  | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2714; |
+  | Thursday  | Modify nba_pistons into 'nba_analytics' package structure. | &#x2714; |
+  | Friday    | Continue package modifications. | &#x2714; |
+  | Saturday  | **N/A: No Progress on Saturdays.** | --- |
+  | Sunday    | Set up Azure, SQL, and data factory. | &#x2714; |
 
 </details>
 

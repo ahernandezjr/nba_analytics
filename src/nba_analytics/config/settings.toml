@@ -1,6 +1,7 @@
+# [metadata]
 settings_file_name = "settings.toml"
 
-# File data locations
+# [directories]
 DATA_DIR = "data/"
 DATASET_DIR = "data/datasets/"
 LOGS_DIR = 'logs/'
@@ -8,12 +9,17 @@ MODELS_DIR = 'data/models/'
 GRAPHS_DIR = 'data/graphs/' 
 REPORTS_DIR = 'reports/'
 
-# File data names
+# [creation.files]
+PLAYERS_NAME = "nba_players.csv"
+PLAYERS_BASIC_NAME = "nba_players_basic.csv"
+PLAYERS_ADVANCED_NAME = "nba_players_advanced.csv"
+
+# [dataset.files]
 DATA_FILE_NAME = "nba_player_stats.csv"
 DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.csv"
 DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.csv"
 DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.csv"
 DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
 
-# Data variables
+# [models.variables]
 FILTER_AMT = 5
