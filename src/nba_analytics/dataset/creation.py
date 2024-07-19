@@ -4,21 +4,9 @@ import pandas as pd
 from basketball_reference_web_scraper import client
 
 from ..utils import filename_grabber
-from ..utils.config import settings, azure
+from ..utils.config import settings
 from ..utils.logger import get_logger
 
-
-# Directories
-DATASET_DIR = settings.DATASET_DIR
-LOGS_DIR = settings.LOGS_DIR
-
-# Pre-processed Data file names
-PLAYERS_NAME = settings.PLAYERS_NAME
-PLAYERS_BASIC_NAME = settings.PLAYERS_BASIC_NAME
-PLAYERS_ADVANCED_NAME = settings.PLAYERS_ADVANCED_NAME
-
-# Output Data file name
-DATA_FILE_NAME = settings.DATA_FILE_NAME
 
 # Data Creation Variables
 BATCH_SIZE = 100
@@ -27,13 +15,17 @@ YEARS_BACK = 12
 
 logger = get_logger(__name__)
 
+
 def create_directories():
-    for directory in [DATASET_DIR, LOGS_DIR]:
+    for directory in [filename_grabber.get_dataset_dir(), filename_grabber.get_logs_dir()]:
         os.makedirs(directory, exist_ok=True)
+        if directory == settings.DATASET_DIR:
+            for subdirectory in [settings.BRONZE_DIR, settings.SILVER_DIR, settings.GOLD_DIR]:
+                os.makedirs(os.path.join(directory, subdirectory), exist_ok=True)
 
 def update_players_csv(basic_file_name, advanced_file_name, year):
-    players_basic_path = filename_grabber.get_any_file(basic_file_name)
-    players_advanced_path = filename_grabber.get_any_file(advanced_file_name)
+    players_basic_path = filename_grabber.get_data_file("bronze", basic_file_name)
+    players_advanced_path = filename_grabber.get_data_file("bronze", advanced_file_name)
 
     players_data_basic = client.players_season_totals(season_end_year=year)
     players_data_advanced = client.players_advanced_season_totals(season_end_year=year)
@@ -71,9 +63,9 @@ def update_players_csv(basic_file_name, advanced_file_name, year):
     logger.info(f"Data saved to {players_basic_path} and {players_advanced_path} for year {year}")
 
 def merge_player_data(basic_file_name, advanced_file_name, output_file_name):
-    players_basic_path = filename_grabber.get_any_file(basic_file_name)
-    players_advanced_path = filename_grabber.get_any_file(advanced_file_name)
-    output_file_path = filename_grabber.get_any_file(output_file_name)
+    players_basic_path = filename_grabber.get_data_file("bronze", basic_file_name)
+    players_advanced_path = filename_grabber.get_data_file("bronze", advanced_file_name)
+    output_file_path = filename_grabber.get_data_file("bronze", output_file_name)
 
     players_basic_df = pd.read_csv(players_basic_path)
     players_advanced_df = pd.read_csv(players_advanced_path)
@@ -88,8 +80,12 @@ def collect_data():
     create_directories()
 
     for year in range(2001, 2025):
-        update_players_csv(PLAYERS_BASIC_NAME, PLAYERS_ADVANCED_NAME, year)
-        merge_player_data(PLAYERS_BASIC_NAME, PLAYERS_ADVANCED_NAME, DATA_FILE_NAME)
+        update_players_csv(settings.PLAYERS_BASIC_NAME,
+                           settings.PLAYERS_ADVANCED_NAME,
+                           year)
+        merge_player_data(settings.PLAYERS_BASIC_NAME,
+                          settings.PLAYERS_ADVANCED_NAME,
+                          settings.DATA_FILE_NAME)
         time.sleep(3.5) # Sleep for 3.5 seconds to avoid rate limiting
 
     logger.info("Data collection completed.")

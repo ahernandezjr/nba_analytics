@@ -69,11 +69,11 @@ The project directory is organized as follows:
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Set up Azure. | &#x2714; |
-  | Tuesday   | Research ways to implement ETL. | &#x2716; |
-  | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2716; |
-  | Thursday  | Complete the module setup and begin the function input pipeline. | &#x2716; |
-  | Friday    | Set up the data factory for bronze, silver, gold data layers. | &#x2716; |
+  | Monday    | Continued package integration and SQL setup. | &#x2714; |
+  | Tuesday   | Complete module [`azure`](src/nba_analytics/cloud/azure) package. | &#x2716; |
+  | Wednesday | Complete SQL -> Data Factory pipeline on settings.azure. | &#x2716; |
+  | Thursday  | Wednesday task completion dependant. | &#x2716; |
+  | Friday    | Wednesday task completion dependant. | &#x2716; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
   | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
 
@@ -102,17 +102,7 @@ The project directory is organized as follows:
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Continued package integration and SQL setup. | &#x2714; |
-  | Tuesday   | Complete module [`azure`](src/nba_analytics/cloud/azure) package. | &#x2716; |
-  | Wednesday | Complete SQL -> Data Factory pipeline on Azure. | &#x2716; |
-  | Thursday  | Wednesday task completion dependant. | &#x2716; |
-  | Friday    | Wednesday task completion dependant. | &#x2716; |
-  | Saturday  | **N/A: No Progress on Saturdays.** | --- |
-  | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
-
-  | Day       | Task | Status |
-  | --------- | --------- | --------- |
-  | Monday    | Set up Azure. | &#x2714; |
+  | Monday    | Set up settings.azure. | &#x2714; |
   | Tuesday   | Research ways to implement ETL. | &#x2714; |
   | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2714; |
   | Thursday  | Modify nba_pistons into 'nba_analytics' package structure. | &#x2714; |

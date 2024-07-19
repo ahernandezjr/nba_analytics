@@ -4,18 +4,11 @@ import numpy as np
 import pandas as pd
 import torch
 
+from ..utils import filename_grabber
 from ..utils.config import settings
 from ..utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
-
-# Set configs from settings
-DATASET_DIR = settings.DATASET_DIR
-DATA_FILE_NAME = settings.DATA_FILE_NAME
-DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
-DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
-DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
-DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
 
 FILTER_AMT = settings.FILTER_AMT
 
@@ -101,9 +94,9 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         return self.scaler.inverse_transform(data)
 
 
-def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
-                   np_overlap_filename=DATA_FILE_5YEAR_OVERLAP,
-                   dict_filename=DATA_FILE_5YEAR_JSON_NAME):
+def create_dataset(df_filename=settings.DATA_FILE_5YEAR_NAME,
+                   np_overlap_filename=settings.DATA_FILE_5YEAR_OVERLAP,
+                   dict_filename=settings.DATA_FILE_5YEAR_JSON_NAME):
     """
     Creates a custom dataset for the NBA player statistics.
 
@@ -121,13 +114,15 @@ def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
     # df = pd.read_csv(df_filename).apply(pd.to_numeric, errors='coerce')
 
     # Load the numpy array with proper numeric types
-    np_overlap = np.loadtxt(os.path.join(os.getcwd(), DATASET_DIR, np_overlap_filename), delimiter=",")
+    np_overlap = np.loadtxt(filename_grabber.get_data_file("gold", np_overlap_filename),
+                            delimiter=",")
 
     # Reshape the 2D numpy array to its original shape
     np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
     # Load the dictionary with proper numeric types
-    df_dict = pd.read_json(os.path.join(os.getcwd(), DATASET_DIR, dict_filename), typ='series').to_dict()
+    df_dict = pd.read_json(filename_grabber.get_data_file("gold", dict_filename),
+                           typ='series').to_dict()
 
     # Create the dataset
     dataset = NBAPlayerDataset(np_overlap)

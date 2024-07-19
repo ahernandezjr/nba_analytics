@@ -14,6 +14,7 @@ from ..dataset.torch_overlap import NBAPlayerDataset
 from .models.lstm import get_custom_lstm, get_nn_LSTM
 from .models.neuralnet import CustomNN
 
+from ..utils import filename_grabber
 from ..utils.config import settings
 from ..utils.logger import get_logger
 
@@ -22,31 +23,27 @@ from ..utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-# Set configs from settings
-DATASET_DIR = settings.DATASET_DIR
-MODELS_DIR = settings.MODELS_DIR
-DATA_FILE_NAME = settings.DATA_FILE_NAME
-DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
-DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
-DATA_FILE_5YEAR_OVERLAP = settings.DATA_FILE_5YEAR_OVERLAP
-DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
-
 FILTER_AMT = settings.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the dataset from the tensor file
-df = pd.read_csv(os.path.join(os.getcwd(), DATASET_DIR, DATA_FILE_5YEAR_TENSOR_NAME))
+df = pd.read_csv(filename_grabber.get_data_file(dir_name='gold',
+                                                data_file_name=settings.DATA_FILE_5YEAR_TENSOR_NAME))
 
 # Load the numpy array with proper numeric types
-np_overlap = np.loadtxt(os.path.join(os.getcwd(), DATASET_DIR, DATA_FILE_5YEAR_OVERLAP), delimiter=",")
+np_overlap = np.loadtxt(filename_grabber.get_data_file(dir_name='gold',
+                                                       data_file_name=settings.DATA_FILE_5YEAR_OVERLAP),
+                        delimiter=",")
 
 # Reshape the 2D numpy array to its original shape
 np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
 # Load the dictionary with proper numeric types
-df_dict = pd.read_json(os.path.join(os.getcwd(), DATASET_DIR, DATA_FILE_5YEAR_JSON_NAME), typ='series').to_dict()
+df_dict = pd.read_json(filename_grabber.get_data_file(dir_name='gold',
+                                                      data_file_name=settings.DATA_FILE_5YEAR_JSON_NAME),
+                       typ='series').to_dict()
 
 # Instantiate the dataset
 nba_dataset = NBAPlayerDataset(np_overlap)
@@ -187,7 +184,7 @@ def run_model(model_name, epochs=1000):
 
     # Save the model
     filename = f"{model_name}.pth"
-    model_path = os.path.join(os.getcwd(), MODELS_DIR, filename)
+    model_path = filename_grabber.get_model_file(filename)
     
     logger.info(f"Saving model at {model_path}.")
     torch.save(model.state_dict(), model_path)

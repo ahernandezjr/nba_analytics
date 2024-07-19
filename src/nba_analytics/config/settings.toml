@@ -1,12 +1,17 @@
 # [metadata]
 settings_file_name = "settings.toml"
 
-# [directories]
+# [directories.data]
 DATA_DIR = "data/"
-DATASET_DIR = "data/datasets/"
+DATASET_DIR = "datasets/"
+BRONZE_DIR = "bronze/"
+SILVER_DIR = "silver/"
+GOLD_DIR = "gold/"
+
+# [directories.misc]
 LOGS_DIR = 'logs/'
-MODELS_DIR = 'data/models/'
-GRAPHS_DIR = 'data/graphs/' 
+MODELS_DIR = 'models/'
+GRAPHS_DIR = 'graphs/' 
 REPORTS_DIR = 'reports/'
 
 # [creation.files]
@@ -16,6 +21,7 @@ PLAYERS_ADVANCED_NAME = "nba_players_advanced.csv"
 
 # [dataset.files]
 DATA_FILE_NAME = "nba_player_stats.csv"
+DATA_FILE_NAME_JSON = "nba_player_stats.json"
 DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.csv"
 DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.csv"
 DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.csv"
@@ -23,3 +29,20 @@ DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
 
 # [models.variables]
 FILTER_AMT = 5
+
+[azure]
+# Set Azure/Fabric credientials per user
+DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
+DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'
+DATALAKE_ACCOUNT_URI = 'https://{}.dfs.core.windows.net'
+DATALAKE_FILESYSTEM_NAME = 'your_datalake_filesystem_name'
+DATALAKE_DIRECTORY_PATH = 'your_datalake_directory_path'
+SERVER_CONNECTION_STRING = 'your_server_connection_string'
+DATALAKE_SQL_CONNECTION_STRING = 'your_datalake_sql_connection_string'
+
+SQL_SERVER_DOMAIN = '.database.windows.net'
+SQL_SERVER_NAME = 'nbasqlserver'
+SQL_DATABASE_NAME = 'playerdata'
+SQL_TABLE_NAME = 'playerstats'
+SQL_USERNAME = 'ahernandezjr0'
+SQL_PASSWORD = ''

@@ -1,16 +1,17 @@
-azure_settings_file_name = "azure.toml"
+# azure_settings_file_name = "settings.azure.toml"
 
-# Set Azure/Fabric credientials per user
-DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
-DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'
-DATALAKE_ACCOUNT_URI = 'https://{}.dfs.core.windows.net'
-DATALAKE_FILESYSTEM_NAME = 'your_datalake_filesystem_name'
-DATALAKE_DIRECTORY_PATH = 'your_datalake_directory_path'
-SERVER_CONNECTION_STRING = 'your_server_connection_string'
-DATALAKE_SQL_CONNECTION_STRING = 'your_datalake_sql_connection_string'
+# # Set Azure/Fabric credientials per user
+# DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
+# DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'
+# DATALAKE_ACCOUNT_URI = 'https://{}.dfs.core.windows.net'
+# DATALAKE_FILESYSTEM_NAME = 'your_datalake_filesystem_name'
+# DATALAKE_DIRECTORY_PATH = 'your_datalake_directory_path'
+# SERVER_CONNECTION_STRING = 'your_server_connection_string'
+# DATALAKE_SQL_CONNECTION_STRING = 'your_datalake_sql_connection_string'
 
-SQL_SERVER_DOMAIN = '.database.windows.net'
-SQL_SERVER_NAME = 'nbasqlserver'
-SQL_DATABASE_NAME = 'playerdata'
-SQL_USERNAME = ''
-SQL_PASSWORD = ''
+# SQL_SERVER_DOMAIN = '.database.windows.net'
+# SQL_SERVER_NAME = 'nbasqlserver'
+# SQL_DATABASE_NAME = 'playerdata'
+# SQL_TABLE_NAME = 'playerstats'
+# SQL_USERNAME = 'ahernandezjr0'
+# SQL_PASSWORD = ''

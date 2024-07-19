@@ -3,10 +3,11 @@ import time
 import logging
 from colorlog import ColoredFormatter
 
+from ..utils import filename_grabber
 from ..utils.config import settings
 
 
-LOGS_DIR = settings.LOGS_DIR
+LOGS_DIR = filename_grabber.get_logs_dir()
 
 
 # get current time
@@ -17,13 +18,14 @@ def get_current_time():
 # delete old logs up to x
 def delete_old_logs(keep=5):
     logs = [f for f in os.listdir(LOGS_DIR) if f.endswith('.log')]
-    logs.sort(key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), LOGS_DIR, x)))
+    logs.sort(key=lambda x: os.path.getmtime(os.path.join(LOGS_DIR, x)))
     for log in logs[:-keep]:
-        os.remove(os.path.join(os.getcwd(), LOGS_DIR, log))
+        os.remove(os.path.join(LOGS_DIR, log))
 
 
 # create logger
 def get_logger(name):
+    # Create logs directory if it does not exist
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
 
@@ -31,7 +33,7 @@ def get_logger(name):
     delete_old_logs()
 
     # Create log file path
-    log_file = os.path.join(os.getcwd(), LOGS_DIR, f'{1}.log')
+    log_file = os.path.join(LOGS_DIR, f'{1}.log')
     logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
     # Configure logging

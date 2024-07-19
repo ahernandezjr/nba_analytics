@@ -7,14 +7,6 @@ from ..utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
 
-# Set configs from settings
-DATASET_DIR = settings.DATASET_DIR
-DATA_FILE_NAME = settings.DATA_FILE_NAME
-DATA_FILE_5YEAR_NAME = settings.DATA_FILE_5YEAR_NAME
-DATA_FILE_5YEAR_TENSOR_NAME = settings.DATA_FILE_5YEAR_TENSOR_NAME
-DATA_FILE_5YEAR_JSON_NAME = settings.DATA_FILE_5YEAR_JSON_NAME
-
-
 # Create logger
 logger = get_logger(__name__)
 
@@ -104,9 +96,9 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         return self.scaler.inverse_transform(data)
 
 
-def create_dataset(df_filename=DATA_FILE_5YEAR_NAME,
-                   df_tensor_filename=DATA_FILE_5YEAR_TENSOR_NAME,
-                   dict_filename=DATA_FILE_5YEAR_JSON_NAME):
+def create_dataset(df_filename=settings.DATA_FILE_5YEAR_NAME,
+                   df_tensor_filename=settings.DATA_FILE_5YEAR_TENSOR_NAME,
+                   dict_filename=settings.DATA_FILE_5YEAR_JSON_NAME):
     """
     Creates a custom dataset for the NBA player statistics.
 

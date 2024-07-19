@@ -6,6 +6,7 @@ import dataframe_image as dfi
 
 import git
 
+from . import filename_grabber
 from .config import settings
 from .logger import get_logger
 import os
@@ -15,7 +16,6 @@ import os
 logger = get_logger(__name__)
 
 # Set configs from settings
-DATASET_DIR = settings.DATASET_DIR
 GRAPHS_DIR = settings.GRAPHS_DIR
 REPORTS_DIR = settings.REPORTS_DIR
 
@@ -211,14 +211,14 @@ def create_report():
     write_to_pdf(pdf, "1. The graph below demonstates the basic analytics of the NBA dataset:")
 
     # Add the generated visualisations to the PDF
-    create_image(pdf, os.path.join(os.getcwd(), GRAPHS_DIR, "analytics.png"))
+    create_image(pdf, os.path.join(filename_grabber.get_graphs_dir(), "analytics.png"))
     pdf.ln(10)
 
     # First page content text
     write_to_pdf(pdf, "2. The visualisations below show model prediction comparisons:")
 
     # Add the generated visualisations to the PDF
-    create_image(pdf, os.path.join(os.getcwd(), GRAPHS_DIR, "model_predictions.png"))
+    create_image(pdf, os.path.join(filename_grabber.get_graphs_dir(), "model_predictions.png"))
     # pdf.image(os.path.join(os.getcwd(), GRAPHS_DIR, "pca.png"), WIDTH/2, 200, WIDTH/2-10)
     pdf.ln(10)
 
@@ -263,11 +263,12 @@ def create_report():
     today = time.strftime("%Y-%m-%d")
 
     # If report directory does not exist, create it
-    if not os.path.exists(os.path.join(os.getcwd(), DATASET_DIR, "reports")):
-        os.makedirs(os.path.join(os.getcwd(), DATASET_DIR, "reports"))
+    if not os.path.exists(filename_grabber.get_models_dir()):
+        os.makedirs(filename_grabber.get_models_dir())
+        
     # Generate the PDF
     # pdf.output(os.path.join(os.getcwd(), REPORTS_DIR, f"EXAMPLE_{today}_report.pdf"), 'F')
-    pdf.output(os.path.join(os.getcwd(), REPORTS_DIR, f"{today}_report.pdf"), 'F')
+    pdf.output(os.path.join(filename_grabber.get_models_dir(), f"{today}_report.pdf"), 'F')
 
 
 if __name__ == "__main__":

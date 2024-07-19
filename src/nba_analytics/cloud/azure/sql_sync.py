@@ -13,11 +13,13 @@ from ...utils.logger import get_logger
 # Create logger
 logger = get_logger(__name__)
 
-# Replace with your own values
-DATASET_DIR = settings.DATASET_DIR
 
 # Connect to Azure SQL Database
-conn_str = f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={azure.SQL_SERVER_NAME}{azure.SQL_SERVER_DOMAIN};DATABASE={azure.SQL_DATABASE_NAME};UID={azure.SQL_USERNAME};PWD={azure.SQL_PASSWORD}"
+conn_str = f"DRIVER={{ODBC Driver 17 for SQL Server}};\
+                SERVER={settings.azure.SQL_SERVER_NAME}{settings.azure.SQL_SERVER_DOMAIN};\
+                DATABASE={settings.azure.SQL_DATABASE_NAME};\
+                UID={settings.azure.SQL_USERNAME};\
+                PWD={settings.azure.SQL_PASSWORD}"
 conn = pyodbc.connect(conn_str)
 
 # Create a cursor object
