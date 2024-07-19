@@ -4,7 +4,12 @@ from .config import settings
 
 # Functions for different data directories
 def get_data_dir():
-    return os.path.join(os.getcwd(), settings.DATA_DIR)
+    if settings.environment.LOCAL:
+        return os.path.join(os.getcwd(), settings.DATA_DIR)
+    elif not settings.environment.LOCAL:
+        return "/mnt/"
+    else:
+        raise ValueError("Invalid environment.")
 
 def get_logs_dir():
     return os.path.join(get_data_dir(), settings.LOGS_DIR)

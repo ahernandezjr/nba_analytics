@@ -30,6 +30,9 @@ DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
 # [models.variables]
 FILTER_AMT = 5
 
+[environment]
+LOCAL = true  # "local|true", "azure|false"
+
 [azure]
 # Set Azure/Fabric credientials per user
 DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
@@ -41,8 +44,8 @@ SERVER_CONNECTION_STRING = 'your_server_connection_string'
 DATALAKE_SQL_CONNECTION_STRING = 'your_datalake_sql_connection_string'
 
 SQL_SERVER_DOMAIN = '.database.windows.net'
-SQL_SERVER_NAME = 'nbasqlserver'
-SQL_DATABASE_NAME = 'playerdata'
-SQL_TABLE_NAME = 'playerstats'
-SQL_USERNAME = 'ahernandezjr0'
+SQL_SERVER_NAME = ''
+SQL_DATABASE_NAME = ''
+SQL_TABLE_NAME = ''
+SQL_USERNAME = ''
 SQL_PASSWORD = ''
