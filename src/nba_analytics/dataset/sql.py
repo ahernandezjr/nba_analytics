@@ -14,10 +14,10 @@ from ..utils.logger import get_logger
 
 
 driver = "{ODBC Driver 17 for SQL Server}"
-server = str.join("", [settings.azure.SQL_SERVER_NAME, settings.azure.SQL_SERVER_DOMAIN])
-database = settings.azure.SQL_DATABASE_NAME
-user = settings.azure.SQL_USERNAME
-password = settings.azure.SQL_PASSWORD
+server = str.join("", [settings.cloud.SQL_SERVER_NAME, settings.cloud.SQL_SERVER_DOMAIN])
+database = settings.cloud.SQL_DATABASE_NAME
+user = settings.cloud.SQL_USERNAME
+password = settings.cloud.SQL_PASSWORD
 
 
 logger = get_logger(__name__)

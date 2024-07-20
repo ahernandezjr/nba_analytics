@@ -3,13 +3,13 @@
 # '''
 
 # import os
-# from settings.azure.storage.filedatalake import (
+# from settings.cloud.storage.filedatalake import (
 #     DataLakeServiceClient,
 #     DataLakeDirectoryClient,
 #     FileSystemClient
 # )
 
-# from settings.azure.identity import DefaultAzureCredential
+# from settings.cloud.identity import DefaultAzureCredential
 
 # from ..utils.config import settings, azure
 # from ..utils.logger import get_logger
@@ -20,11 +20,11 @@
 
 # # Replace with your own values
 # DATASET_DIR = settings.DATASET_DIR
-# DATALAKE_ACCOUNT_NAME = settings.azure.DATALAKE_ACCOUNT_NAME
-# DATALAKE_ACCOUNT_KEY = settings.azure.DATALAKE_ACCOUNT_KEY
-# DATALAKE_ACCOUNT_URI = settings.azure.DATALAKE_ACCOUNT_URI
-# DATALAKE_FILESYSTEM_NAME = settings.azure.DATALAKE_FILESYSTEM_NAME
-# DATALAKE_DIRECTORY_PATH = settings.azure.DATALAKE_DIRECTORY_PATH
+# DATALAKE_ACCOUNT_NAME = settings.cloud.DATALAKE_ACCOUNT_NAME
+# DATALAKE_ACCOUNT_KEY = settings.cloud.DATALAKE_ACCOUNT_KEY
+# DATALAKE_ACCOUNT_URI = settings.cloud.DATALAKE_ACCOUNT_URI
+# DATALAKE_FILESYSTEM_NAME = settings.cloud.DATALAKE_FILESYSTEM_NAME
+# DATALAKE_DIRECTORY_PATH = settings.cloud.DATALAKE_DIRECTORY_PATH
 
 
 # def get_service_client_token_credential(account_url) -> DataLakeServiceClient:

@@ -1,4 +1,4 @@
-# azure_settings_file_name = "settings.azure.toml"
+# azure_settings_file_name = "settings.cloud.toml"
 
 # # Set Azure/Fabric credientials per user
 # DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'

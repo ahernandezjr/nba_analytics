@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='nba_analytics',
-    version='0.2.3',
+    version='0.2.4',
     author='Alexander Hernandez',
     author_email='ahernandezjr0@gmail.com',
     description='A package for collecting and analyzing NBA player data.',
@@ -28,5 +28,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.10',
 )

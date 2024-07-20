@@ -43,19 +43,35 @@ def set_reports_dir(reports_dir: str):
 
 # Functions to set the azure config
 def set_sql_server_domain(sql_server_domain: str):
-    settings.azure.SQL_SERVER_DOMAIN = sql_server_domain
+    settings.cloud.SQL_SERVER_DOMAIN = sql_server_domain
 
 def set_sql_server_name(sql_server_name: str):
-    settings.azure.SQL_SERVER_NAME = sql_server_name
+    settings.cloud.SQL_SERVER_NAME = sql_server_name
 
 def set_sql_database_name(sql_database_name: str):
-    settings.azure.SQL_DATABASE_NAME = sql_database_name
+    settings.cloud.SQL_DATABASE_NAME = sql_database_name
 
 def set_sql_username(sql_username: str):
-    settings.azure.SQL_USERNAME = sql_username
+    settings.cloud.SQL_USERNAME = sql_username
 
 def set_sql_password(sql_password: str):
-    settings.azure.SQL_PASSWORD = sql_password
+    settings.cloud.SQL_PASSWORD = sql_password
+
+
+# Functions to configure the environment
+def config_to_local(data_dir, dataset_dir):
+    settings.environment.LOCAL = True
+
+    settings.DATA_DIR = data_dir
+    settings.DATASET_DIR = dataset_dir
+
+
+# Functions to configure settings config to cloud
+def config_to_cloud(data_dir, dataset_dir):
+    settings.environment.LOCAL = False
+
+    settings.DATA_DIR = data_dir
+    settings.DATASET_DIR = dataset_dir
 
 
 # Functions to reset the settings and azure config

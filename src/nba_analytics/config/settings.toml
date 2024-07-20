@@ -1,8 +1,10 @@
 # [metadata]
 settings_file_name = "settings.toml"
 
-# [directories.data]
+# [directories]
 DATA_DIR = "data/"
+
+# [directories.datasets]
 DATASET_DIR = "datasets/"
 BRONZE_DIR = "bronze/"
 SILVER_DIR = "silver/"
@@ -33,7 +35,7 @@ FILTER_AMT = 5
 [environment]
 LOCAL = true  # "local|true", "azure|false"
 
-[azure]
+[cloud]
 # Set Azure/Fabric credientials per user
 DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
 DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'

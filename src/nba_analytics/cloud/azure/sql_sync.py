@@ -16,10 +16,10 @@ logger = get_logger(__name__)
 
 # Connect to Azure SQL Database
 conn_str = f"DRIVER={{ODBC Driver 17 for SQL Server}};\
-                SERVER={settings.azure.SQL_SERVER_NAME}{settings.azure.SQL_SERVER_DOMAIN};\
-                DATABASE={settings.azure.SQL_DATABASE_NAME};\
-                UID={settings.azure.SQL_USERNAME};\
-                PWD={settings.azure.SQL_PASSWORD}"
+                SERVER={settings.cloud.SQL_SERVER_NAME}{settings.cloud.SQL_SERVER_DOMAIN};\
+                DATABASE={settings.cloud.SQL_DATABASE_NAME};\
+                UID={settings.cloud.SQL_USERNAME};\
+                PWD={settings.cloud.SQL_PASSWORD}"
 conn = pyodbc.connect(conn_str)
 
 # Create a cursor object

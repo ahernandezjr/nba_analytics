@@ -70,12 +70,12 @@ The project directory is organized as follows:
   | Day       | Task | Status |
   | --------- | --------- | --------- |
   | Monday    | Continued package integration and SQL setup. | &#x2714; |
-  | Tuesday   | Complete module [`azure`](src/nba_analytics/cloud/azure) package. | &#x2716; |
-  | Wednesday | Complete SQL -> Data Factory pipeline on settings.azure. | &#x2716; |
-  | Thursday  | Wednesday task completion dependant. | &#x2716; |
-  | Friday    | Wednesday task completion dependant. | &#x2716; |
+  | Tuesday   | Complete package integration. | &#x2714; |
+  | Wednesday | Complete SQL -> Data Factory pipeline. | &#x2714; |
+  | Thursday  | Begin Databricks/Spark integration with [`bronze_to_silver`](nba_analytics\src\nba_analytics\dataset\bronze_to_silver.py) [`silver_to_gold`](nba_analytics\src\nba_analytics\dataset\silver_to_gold.py). | &#x2714; |
+  | Friday    | Continue working on Databricks/Spark data engineering. | &#x2714; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
-  | Sunday    | Integrate with Power BI for visualization and reporting. | &#x2716; |
+  | Sunday    | Create a working/or prototype of the bronze_to_silver_to_gold pipeline. | &#x2716; |
 
 </details>
 
@@ -102,7 +102,7 @@ The project directory is organized as follows:
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Set up settings.azure. | &#x2714; |
+  | Monday    | Set up settings.cloud. | &#x2714; |
   | Tuesday   | Research ways to implement ETL. | &#x2714; |
   | Wednesday | Reconfigure the project into a module for Azure Functions functionality. | &#x2714; |
   | Thursday  | Modify nba_pistons into 'nba_analytics' package structure. | &#x2714; |
