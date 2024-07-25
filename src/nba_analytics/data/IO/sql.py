@@ -269,13 +269,13 @@ def insert_advanced_stats(session, row):
     session.commit()
 
 # Insert data from CSV files
-def csv_to_sql():
-    with open('nba_players_basic.csv', newline='') as csvfile:
+def csv_to_sql(basic_path, advanced_path):
+    with open(basic_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             insert_basic_stats(session, row)
 
-    with open('nba_players_advanced.csv', newline='') as csvfile:
+    with open(advanced_path, newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             insert_advanced_stats(session, row)
