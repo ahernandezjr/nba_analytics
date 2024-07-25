@@ -82,7 +82,7 @@ def generate_commits_png():
     # Keep all rows with the date in the last 7 days
     commit_data = commit_data[commit_data['Date'] >= pd.Timestamp.today() - pd.DateOffset(days=7)]
    
-    # To do: show full commit message
+    # TODO: show full commit message
 
     # If the extra_files directory does not exist, create it
     if not os.path.exists(os.path.join(os.getcwd(), REPORTS_DIR, "extra_files")):
@@ -166,7 +166,7 @@ def create_intro_pages(pdf):
     write_to_pdf(pdf, "- Secondary goals:")
     write_to_pdf(pdf, "  - Understand the data and perform analytics on its specifications and data insights.")
     write_to_pdf(pdf, "  - Perform basic statistical modeling on the data.")
-    write_to_pdf(pdf, "  - Use neural nets like MLP, ARIMA, and LSTM to predict what to do with the players.")
+    write_to_pdf(pdf, "  - Use neural nets like MLP, ARIMA, and LSTM to predict what TODO with the players.")
     end_section(pdf)
 
     # Add Key Features section

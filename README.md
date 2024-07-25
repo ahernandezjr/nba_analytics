@@ -46,7 +46,7 @@ The project directory is organized as follows:
       - `filtering.py`: Module for processing datasets further (possibly to be used by `dataset_processing.py`).
     - **machine_learning/**: Contains scripts for machine learning tasks.
       - **models/**: Contains models to be used for the machine learning tasks.
-        - `arima.py`: (To Do for better step evaluation)
+        - `arima.py`: (TODO for better step evaluation)
         - `lstm.py`: LSTM neural networks (custom and PyTorch built-in) for Many-to-Many prediction.
         - `neuralnet.py`: Basic neural net for 1-to-1 prediction
       - `train_models.py`: Module for directly training models in `models/`.
@@ -65,22 +65,22 @@ The project directory is organized as follows:
 # Work Schedule
 
 <details open>
-  <summary>Week of 7/15</summary>
+  <summary>Week of 7/22</summary>
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Continued package integration and SQL setup. | &#x2714; |
-  | Tuesday   | Complete package integration. | &#x2714; |
-  | Wednesday | Complete SQL -> Data Factory pipeline. | &#x2714; |
-  | Thursday  | Begin Databricks/Spark integration with [`bronze_to_silver`](nba_analytics\src\nba_analytics\dataset\bronze_to_silver.py) [`silver_to_gold`](nba_analytics\src\nba_analytics\dataset\silver_to_gold.py). | &#x2714; |
-  | Friday    | Continue working on Databricks/Spark data engineering. | &#x2714; |
+  | Monday    | Completed pipeline of bronze_to_silver_to_gold. | &#x2714; |
+  | Tuesday   | Rethinking pipeline. | &#x2714; |
+  | Wednesday | ~~Start Synapse integration to create gold_db.~~ TODO: Needs refactoring of tables input to SQL database. | &#x2714; |
+  | Thursday  | Start refactoring of input data <br> Start refactoring output gold data to integrate dictionaries for 3d data. <br> Start PowerBI integration (using gold output instead of gold_db for now). | &#x2714; |
+  | Friday    | Complete PowerBI prototype report. | &#x2716; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
-  | Sunday    | Create a working/or prototype of the bronze_to_silver_to_gold pipeline. | &#x2716; |
+  | Sunday    | Integrate new SQL into pipeline. | &#x2716; |
 
 </details>
 
 <details>
-  <summary>To Dos </summary>
+  <summary>TODOs </summary>
 
   | Task | Description |
   | ---- | ----------- |
@@ -94,6 +94,21 @@ The project directory is organized as follows:
   | Automate workflow using Azure Logic Apps or Azure DevOps. | For streamlined operations. |
   | Finish setting up the Data Factory and integrate with Databricks. | For enhanced data processing and analytics, added for Sunday. |
   | Before Azure Machine Learning Tasks. | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. |
+
+</details>
+
+<details>
+  <summary>Week of 7/15</summary>
+
+  | Day       | Task | Status |
+  | --------- | --------- | --------- |
+  | Monday    | Continued package integration and SQL setup. | &#x2714; |
+  | Tuesday   | Complete package integration. | &#x2714; |
+  | Wednesday | Complete SQL -> Data Factory pipeline. | &#x2714; |
+  | Thursday  | Begin Databricks/Spark integration with [`bronze_to_silver`](nba_analytics\src\nba_analytics\dataset\bronze_to_silver.py) [`silver_to_gold`](nba_analytics\src\nba_analytics\dataset\silver_to_gold.py). | &#x2714; |
+  | Friday    | Continue working on Databricks/Spark data engineering. | &#x2714; |
+  | Saturday  | **N/A: No Progress on Saturdays.** | --- |
+  | Sunday    | Create a working/or prototype of the bronze_to_silver_to_gold pipeline. | &#x2714; |
 
 </details>
 

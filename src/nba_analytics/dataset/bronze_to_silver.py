@@ -96,9 +96,10 @@ def log_summary(df, df_cleaned):
     logger.info(f"Filtered DataFrame: Entries={len(df_cleaned)}, Unique Players={len(df_cleaned['slug'].unique())}")
     
 
-def run_processing():
+def run_processing(df=None):
     # Load the data
-    df = pd.read_csv(filename_grabber.get_data_file("bronze", settings.DATA_FILE_NAME))
+    if df is None:
+        df = pd.read_csv(filename_grabber.get_data_file("bronze", settings.DATA_FILE_NAME))
 
     # Create a cleaned dataframe and dictionary
     df_cleaned, dict_df = create_silver_dataset(df)

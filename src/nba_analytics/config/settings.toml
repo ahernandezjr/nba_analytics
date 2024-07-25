@@ -26,7 +26,7 @@ DATA_FILE_NAME = "nba_player_stats.csv"
 DATA_FILE_NAME_JSON = "nba_player_stats.json"
 DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.csv"
 DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.csv"
-DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.csv"
+DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.npz"
 DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
 
 # [models.variables]
@@ -51,3 +51,11 @@ SQL_DATABASE_NAME = ''
 SQL_TABLE_NAME = ''
 SQL_USERNAME = ''
 SQL_PASSWORD = ''
+
+# [cloud.dataset.files]
+DATA_FILE_NAME = "nba_player_stats.parquet"
+DATA_FILE_NAME_JSON = "nba_player_stats.json"
+DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.parquet"
+DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.parquet"
+DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.parquet"
+DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"

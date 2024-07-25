@@ -137,7 +137,7 @@ def clean_nontensor_values(df):
     # Drop columns that have NaN values
     df_filtered = df_filtered.dropna(axis=1)
 
-    # TO DO: Implement further data cleaning steps here
+    # TODO: Implement further data cleaning steps here
         # One hot encoding for categorical values etc...
 
     # # Apply PCA to the filtered DataFrame

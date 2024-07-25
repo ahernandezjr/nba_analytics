@@ -15,7 +15,7 @@
 - Secondary goals:
   - Understand the data and perform analytics on its specifications and data insights.
   - Perform basic statistical modeling on the data.
-  - Use neural nets like MLP, ARIMA, and LSTM to predict what to do with the players.
+  - Use neural nets like MLP, ARIMA, and LSTM to predict what TODO with the players.
 
 ## Key Features
 

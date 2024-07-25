@@ -202,7 +202,7 @@ logger = get_logger(__name__)
 #     # Drop columns that have NaN values
 #     df_filtered = df_filtered.dropna(axis=1)
 
-#     # TO DO: Implement further data cleaning steps here
+#     # TODO: Implement further data cleaning steps here
 #         # One hot encoding for categorical values etc...
 
 #     # # Apply PCA to the filtered DataFrame
@@ -321,3 +321,46 @@ logger = get_logger(__name__)
 
 # if __name__ == '__main__':
 #     run_processing()    
+
+
+def create_overlap_data(df):
+    """
+    Creates a DataFrame of players who have played for more than 5 years.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing player statistics.
+
+    Returns:
+        numpy.array: The numpy array with player statistics for each 5 consecutive years a player plays.
+    """
+    logger.debug("Creating overlap data...")
+
+    df_overlap = df.copy()
+
+    # Convert DataFrame to numpy array
+    np_overlap = df_overlap.to_numpy()
+
+    # Get all unique slugs
+    np_uniques = np.unique(np_overlap[:, 0])
+
+    # Create a list of numpy arrays for each player
+    np_overlap = [np_overlap[np_overlap[:, 0] == unique] for unique in np_uniques]
+
+    # Create new numpy array
+    np_out = []
+
+    for player_stats in np_overlap:
+        for i in range(len(player_stats) - 5):
+            if player_stats[i][1] + 5 == player_stats[i + 5][1]:
+                np_out.append(player_stats[i:i+5])
+
+    # Convert list of numpy arrays to numpy array
+    np_out = np.array(np_out)
+
+    # Remove the slug column
+    np_out = np_out[:, :, 1:]
+
+    # # Convert 3D numpy array to 2D numpy array
+    # np_out = np_out.reshape(np_out.shape[0], -1)
+
+    return np_out

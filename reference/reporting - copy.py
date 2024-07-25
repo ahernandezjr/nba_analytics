@@ -90,7 +90,7 @@ def create_report():
     write_to_pdf(c, "- Secondary goals:")
     write_to_pdf(c, "  - Understand the data and perform analytics on its specifications and data insights.")
     write_to_pdf(c, "  - Perform basic statistical modeling on the data.")
-    write_to_pdf(c, "  - Use neural nets like MLP, ARIMA, and LSTM to predict what to do with the players.")
+    write_to_pdf(c, "  - Use neural nets like MLP, ARIMA, and LSTM to predict what TODO with the players.")
     end_section(c)
 
     # Add Key Features section

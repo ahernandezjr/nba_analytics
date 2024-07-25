@@ -55,11 +55,11 @@ def filter_players_over_5_years(df):
         # 1. for less than 5 years;
         # 2. during 2001, remove that player from the dictionary; and
         # 3. has continuous years (checks for a gap or trades).
-    # TO DO: ALLOW FOR CONTINUOUS PLAYERS OVER FIRST 5 YEARS AND SPLIT YEARS FOR LARGER TRAINING SET
+    # TODO: ALLOW FOR CONTINUOUS PLAYERS OVER FIRST 5 YEARS AND SPLIT YEARS FOR LARGER TRAINING SET
     dict_first_five = {player : years for player, years in player_years_dict.items() if \
                           len(years) >= 5 and \
                           2001 not in years and \
-                          list(range(years[0], years[len(years) - 1] + 1)) == years[0:len(years)]}
+                          list(range(int(years[0]), int(years[len(years) - 1] + 1))) == [int(i) for i in years[0:len(years)]]}
 
     # Filter the dataframe for players in the dictionary
     df_first_five = df[df['slug'].isin(dict_first_five.keys())]

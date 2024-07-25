@@ -23,7 +23,7 @@ from ...utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-# TO DO: Implement to predict every year for first 5 years
+# TODO: Implement to predict every year for first 5 years
 def arima():
     '''
     Run the ARIMA model.

@@ -17,6 +17,8 @@ FILTER_AMT = settings.FILTER_AMT
 logger = get_logger(__name__)
 
 
+# TODO: Change to import from dict (has | key: 'filter', value: 'FILTER_AMT')
+
 class NBAPlayerDataset(torch.utils.data.Dataset):
     """
     A custom dataset class for the NBA player statistics dataset.

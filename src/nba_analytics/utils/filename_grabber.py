@@ -23,7 +23,12 @@ def get_reports_dir():
 
 # Functions for dataset medallion directories
 def get_dataset_dir():
-    return os.path.join(get_data_dir(), settings.DATASET_DIR)
+    if settings.environment.LOCAL:
+        return os.path.join(get_data_dir(), settings.DATASET_DIR)
+    elif not settings.environment.LOCAL:
+        return "/mnt/"
+    else:
+        raise ValueError("Invalid environment.")
 
 def get_bronze_dir():
     return os.path.join(get_dataset_dir(), settings.BRONZE_DIR)
