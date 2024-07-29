@@ -4,9 +4,9 @@ import numpy as np
 import pandas as pd
 import torch
 
-from ..utils import filename_grabber
-from ..utils.config import settings
-from ..utils.logger import get_logger
+from ...utils import filename_grabber
+from ...utils.config import settings
+from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
 
@@ -96,9 +96,9 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         return self.scaler.inverse_transform(data)
 
 
-def create_dataset(df_filename=settings.DATA_FILE_5YEAR_NAME,
-                   np_overlap_filename=settings.DATA_FILE_5YEAR_OVERLAP,
-                   dict_filename=settings.DATA_FILE_5YEAR_JSON_NAME):
+def create_dataset(df_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST,
+                   np_overlap_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS,
+                   dict_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON):
     """
     Creates a custom dataset for the NBA player statistics.
 

@@ -3,9 +3,9 @@ import time
 import pandas as pd
 from basketball_reference_web_scraper import client
 
-from ..utils import filename_grabber
-from ..utils.config import settings
-from ..utils.logger import get_logger
+from ...utils import filename_grabber
+from ...utils.config import settings
+from ...utils.logger import get_logger
 
 
 # Data Creation Variables
@@ -80,12 +80,12 @@ def collect_data():
     create_directories()
 
     for year in range(2001, 2025):
-        update_players_csv(settings.PLAYERS_BASIC_NAME,
-                           settings.PLAYERS_ADVANCED_NAME,
+        update_players_csv(settings.dataset.bronze.DATA_FILE_BASIC,
+                           settings.dataset.bronze.DATA_FILE_ADVANCED,
                            year)
-        merge_player_data(settings.PLAYERS_BASIC_NAME,
-                          settings.PLAYERS_ADVANCED_NAME,
-                          settings.DATA_FILE_NAME)
+        merge_player_data(settings.dataset.bronze.DATA_FILE_BASIC,
+                          settings.dataset.bronze.DATA_FILE_ADVANCED,
+                          settings.dataset.bronze.DATA_FILE)
         time.sleep(3.5) # Sleep for 3.5 seconds to avoid rate limiting
 
     logger.info("Data collection completed.")

@@ -323,6 +323,40 @@ logger = get_logger(__name__)
 #     run_processing()    
 
 
+def df_to_dict(df):
+    """
+    Converts a DataFrame to a dictionary with slugs as keys and lists of row dictionaries as values.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame.
+
+    Returns:
+        dict: A dictionary with slugs as keys and lists of row dictionaries as values.
+    """
+    result = {}
+    grouped = df.groupby('slug')
+    for slug, group in grouped:
+        result[slug] = group.to_dict(orient='records')
+    return result
+
+
+def df_to_first_years_dict(df, years=5):
+    """
+    Converts a DataFrame to a dictionary with slugs as keys and lists of the first years row dictionaries as values.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame.
+
+    Returns:
+        dict: A dictionary with slugs as keys and lists of the first five row dictionaries as values.
+    """
+    result = {}
+    grouped = df.groupby('slug')
+    for slug, group in grouped:
+        result[slug] = group.head(years).to_dict(orient='records')
+    return result
+
+
 def create_overlap_data(df):
     """
     Creates a DataFrame of players who have played for more than 5 years.

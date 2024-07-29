@@ -77,10 +77,6 @@ def clean_columns(df):
     columns_to_drop = ['is_combined_totals']
     clean_df = df.drop(columns=columns_to_drop)
 
-    columns_to_keep = ['slug', 'Year', 'age',
-                       'minutes_played', 'made_field_goals', 'attempted_field_goals', 'attempted_three_point_field_goals', 'attempted_free_throws', 'defensive_rebounds', 'turnovers', 'player_efficiency_rating', 'total_rebound_percentage', 'value_over_replacement_player']
-    clean_df = clean_df[columns_to_keep]
-
     logger.debug(f"Cleaned columns: {columns_to_drop}.")
 
     return clean_df
@@ -105,6 +101,9 @@ def clean_rows(df):
     
     # Remove rows with duplicate values
     clean_df = clean_df.drop_duplicates()
+    
+    # Remove both of duplicate years per player from the DataFrame
+    clean_df = clean_df.drop_duplicates(subset=['slug', 'Year'], keep=False)
 
     return clean_df
 

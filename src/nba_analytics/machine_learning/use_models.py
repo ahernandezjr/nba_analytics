@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
-from ..dataset.torch_overlap import NBAPlayerDataset, get_dataset_example
+from ..data.dataset.torch_overlap import NBAPlayerDataset, get_dataset_example
 
 from .train_models import get_model
 
@@ -31,11 +31,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the dataset from the tensor file
 df = pd.read_csv(filename_grabber.get_data_file(dir_name='gold',
-                                                data_file_name=settings.DATA_FILE_5YEAR_TENSOR_NAME))
+                                                data_file_name=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST))
 
 # Load the numpy array with proper numeric types
 np_overlap = np.loadtxt(filename_grabber.get_data_file(dir_name='gold',
-                                                       data_file_name=settings.DATA_FILE_5YEAR_OVERLAP),
+                                                       data_file_name=settings.dataset.gold.DATA_FILE_CONTINUOUS_OVERLAP),
                         delimiter=",")
 
 # Reshape the 2D numpy array to its original shape
@@ -43,7 +43,7 @@ np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
 # Load the dictionary with proper numeric types
 df_dict = pd.read_json(filename_grabber.get_data_file(dir_name='gold',
-                                                      data_file_name=settings.DATA_FILE_5YEAR_JSON_NAME),
+                                                      data_file_name=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON),
                        typ='series').to_dict()
 
 # Instantiate the dataset

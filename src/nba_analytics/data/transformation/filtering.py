@@ -10,64 +10,105 @@ from ...utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-def filter_players_over_5_years(df):
+def filter_columns(df):
+    columns_to_keep = ['slug', 'Year', 'age',
+                       'minutes_played', 'made_field_goals', 'attempted_field_goals',
+                       'attempted_three_point_field_goals', 'attempted_free_throws',
+                       'defensive_rebounds', 'turnovers', 'player_efficiency_rating',
+                       'total_rebound_percentage', 'value_over_replacement_player']
+    filtered_df = df[columns_to_keep]
+
+    return filtered_df
+
+
+def get_player_years_dict(df):
     """
-    Filters the given DataFrame to include only players who have played for more than 5 years.
+    Creates a dictionary of players with a unique key of player id and a value of a list of their years played.
 
     Args:
         df (pandas.DataFrame): The input DataFrame containing player data.
 
     Returns:
-        pandas.DataFrame: The overlapping DataFrame containing players who have played for 5 or more years.
-        pandas.DataFrame: The non-overlapping DataFrame containing the first 5 years of players who have played for 5 or more years.
+        dict: A dictionary with player ids as keys and lists of years played as values.
     """
-    logger.debug("Filtering players who have played for more than 5 years...")
+    return df.groupby('slug')['Year'].apply(list).to_dict()
 
-    # Remove both of duplicate years per player from the DataFrame
-    df_filtered = df.drop_duplicates(subset=['slug', 'Year'], keep=False)
 
-    # Create a dictionary of players with a unique key of player id and a value of a list of their years played
-    player_years_dict = df_filtered.groupby('slug')['Year'].apply(list).to_dict()
+def get_continuous_years(years, min_years):
+    """
+    Gets all continuous periods of given length in the list of years.
 
-    # Include a player from the dictionary if the player has played:
-        # 1. for equal to or more than 5 years;
-        # 2. during 2001, remove that player from the dictionary; and
-        # 3. has continuous 5 years in years (checks for a gap or trades).
-    dict_overlap = {player: years for player, years in player_years_dict.items() if
-                            len(years) >= 5 and
-                            2001 not in years and
-                            any(years[i] + 5 == years[i + 5] for i in range(len(years)) if
-                                i + 5 < len(years))}
-    
-    # Filter the dataframe for players in the dictionary
-    df_overlap = df_filtered[df_filtered['slug'].isin(dict_overlap.keys())]
-    
-    # Sort the DataFrame by player year and id
-    df_overlap = df_overlap.sort_values(by=['slug', 'Year'])
+    Args:
+        years (list): List of years the player has played.
+        min_years (int): Minimum number of continuous years required.
 
-    # Remove rows if not part of a continuous 5 year period
-    # iterate through the DataFrame to remove rows that are not part of a continuous 5 year period
-    df_overlap = df_overlap.groupby('slug').filter(lambda x: any(x['Year'].values[i] + 5 == x['Year'].values[i + 5] \
-                                                                    for i in range(len(x['Year'].values)) \
-                                                                        if i + 5 < len(x['Year'].values)))
+    Returns:
+        list: List of all years within continuous periods of given length.
+    """
+    continuous_years = set()
+    years = sorted(years)
+    for i in range(len(years) - min_years + 1):
+        if all(years[j] - years[i] == j - i for j in range(i, i + min_years)):
+            continuous_years.update(years[i:i + min_years])
+            j = i + min_years
+            while j < len(years) and years[j] - years[j - 1] == 1:
+                continuous_years.add(years[j])
+                j += 1
+    return list(continuous_years)
 
-    # Exclude a player from the dictionary if the player has played:
-        # 1. for less than 5 years;
-        # 2. during 2001, remove that player from the dictionary; and
-        # 3. has continuous years (checks for a gap or trades).
-    # TODO: ALLOW FOR CONTINUOUS PLAYERS OVER FIRST 5 YEARS AND SPLIT YEARS FOR LARGER TRAINING SET
-    dict_first_five = {player : years for player, years in player_years_dict.items() if \
-                          len(years) >= 5 and \
-                          2001 not in years and \
-                          list(range(int(years[0]), int(years[len(years) - 1] + 1))) == [int(i) for i in years[0:len(years)]]}
 
-    # Filter the dataframe for players in the dictionary
-    df_first_five = df[df['slug'].isin(dict_first_five.keys())]
-    
-    # Sort the DataFrame by player year and id
-    df_first_five = df_first_five.sort_values(by=['slug', 'Year'])
+def filter_atleast_continuous_years(df, min_years=5):
+    """
+    Filters the given DataFrame to include only players who have continuous stretches of given length.
 
-    # For each player in the dataframe, keep only the first 5 years
-    df_first_five = df_first_five.groupby('slug').head(5)
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing player data.
+        min_years (int, optional): Minimum number of continuous years required. Default is 5.
 
-    return df_overlap, df_first_five
+    Returns:
+        pandas.DataFrame: The DataFrame containing players who have continuous stretches of given length.
+    """
+    logger.debug(f"Filtering players who have continuous stretches of at least {min_years} years...")
+
+    player_years_dict = get_player_years_dict(df)
+
+    dict_continuous = {
+        player: years for player, years in player_years_dict.items()
+        if len(years) >= min_years and 2001 not in years and get_continuous_years(years, min_years)
+    }
+
+    df_continuous = df[df['slug'].isin(dict_continuous.keys())]
+    df_continuous = df_continuous.sort_values(by=['slug', 'Year'])
+    df_continuous = df_continuous.groupby('slug').filter(
+        lambda x: get_continuous_years(x['Year'].values, min_years)
+    )
+
+    return df_continuous
+
+
+def filter_first_continuous_years(df, min_years=5):
+    """
+    Filters the given DataFrame to include only players whose first 5 years have a continuous stretch of given length.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing player data.
+        min_years (int, optional): Minimum number of continuous years required. Default is 5.
+
+    Returns:
+        pandas.DataFrame: The DataFrame containing players whose first 5 years have a continuous stretch of given length.
+    """
+    logger.debug(f"Filtering players for a continuous stretch of {min_years} years in their first 5 years...")
+
+    player_years_dict = get_player_years_dict(df)
+
+    dict_first_continuous = {
+        player: years for player, years in player_years_dict.items()
+        if len(years) >= min_years and 2001 not in years and 
+        get_continuous_years(years[:5], min_years)
+    }
+
+    df_first_continuous = df[df['slug'].isin(dict_first_continuous.keys())]
+    df_first_continuous = df_first_continuous.sort_values(by=['slug', 'Year'])
+    df_first_continuous = df_first_continuous.groupby('slug').head(5)
+
+    return df_first_continuous

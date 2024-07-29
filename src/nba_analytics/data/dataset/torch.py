@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import torch
 
-from ..utils.config import settings
-from ..utils.logger import get_logger
+from ...utils.config import settings
+from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
 
@@ -96,9 +96,8 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         return self.scaler.inverse_transform(data)
 
 
-def create_dataset(df_filename=settings.DATA_FILE_5YEAR_NAME,
-                   df_tensor_filename=settings.DATA_FILE_5YEAR_TENSOR_NAME,
-                   dict_filename=settings.DATA_FILE_5YEAR_JSON_NAME):
+def create_dataset(df_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST,
+                   dict_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON):
     """
     Creates a custom dataset for the NBA player statistics.
 
@@ -110,10 +109,10 @@ def create_dataset(df_filename=settings.DATA_FILE_5YEAR_NAME,
     """
     logger.info("Creating dataset...")
 
-    logger.info(f"Loading data from {df_filename}, {df_tensor_filename}, and {dict_filename}...")
+    logger.info(f"Loading data from {df_filename} and {dict_filename}...")
     # Load the dataset with proper numeric types
     # df = pd.read_csv(df_filename).apply(pd.to_numeric, errors='coerce')
-    df = pd.read_csv(df_tensor_filename)
+    df = pd.read_csv(df_filename)
 
     # Load the dictionary with proper numeric types
     df_dict = pd.read_json(dict_filename, typ='series').to_dict()

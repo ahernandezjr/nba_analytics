@@ -17,17 +17,39 @@ GRAPHS_DIR = 'graphs/'
 REPORTS_DIR = 'reports/'
 
 # [creation.files]
-PLAYERS_NAME = "nba_players.csv"
-PLAYERS_BASIC_NAME = "nba_players_basic.csv"
-PLAYERS_ADVANCED_NAME = "nba_players_advanced.csv"
+# PLAYERS_NAME = "nba_players_raw.csv"
+# PLAYERS_BASIC_NAME = "nba_players_basic.csv"
+# PLAYERS_ADVANCED_NAME = "nba_players_advanced.csv"
 
 # [dataset.files]
-DATA_FILE_NAME = "nba_player_stats.csv"
-DATA_FILE_NAME_JSON = "nba_player_stats.json"
-DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.csv"
-DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.csv"
-DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.npz"
-DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
+# DATA_FILE_NAME = "nba_player_stats.csv"
+# DATA_FILE_NAME_JSON = "nba_player_stats.json"
+# DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.csv"
+# DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.csv"
+# DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.npz"
+# DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
+
+# Bronze files (raw)
+[dataset.bronze]
+DATA_FILE = "nba_players_bronze.csv"
+DATA_FILE_BASIC = "nba_players_bronze_basic.csv"
+DATA_FILE_ADVANCED = "nba_players_bronze_advanced.csv"
+
+# Silver files (cleaned)
+[dataset.silver]
+DATA_FILE          = "nba_players_silver.csv"
+DATA_FILE_JSON     = "nba_players_silver.json"
+DATA_FILE_CLEANED  = "nba_players_silver_cleaned.csv"
+DATA_FILE_FILTERED = "nba_players_silver_filtered.csv"
+
+# Gold files (final outputs)
+[dataset.gold]
+DATA_FILE_CONTINUOUS         = "nba_players_gold_continuous.csv"
+DATA_FILE_CONTINUOUS_JSON    = "nba_players_gold_continuous.json"
+DATA_FILE_CONTINUOUS_FIRST   = "nba_players_gold_continuous_first.csv"
+DATA_FILE_CONTINUOUS_FIRST_JSON = "nba_players_gold_continuous_first.json"
+DATA_FILE_CONTINUOUS_OVERLAP = "nba_players_gold_continuous_overlap.npz"
+
 
 # [models.variables]
 FILTER_AMT = 5
@@ -53,9 +75,9 @@ SQL_USERNAME = ''
 SQL_PASSWORD = ''
 
 # [cloud.dataset.files]
-DATA_FILE_NAME = "nba_player_stats.parquet"
-DATA_FILE_NAME_JSON = "nba_player_stats.json"
-DATA_FILE_5YEAR_NAME = "nba_player_stats_5years.parquet"
-DATA_FILE_5YEAR_TENSOR_NAME = "nba_player_stats_5years_tensor_ready.parquet"
-DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.parquet"
-DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
+DATA_FILE_NAME = "nba_players.parquet"
+DATA_FILE_NAME_JSON = "nba_players.json"
+DATA_FILE_5YEAR_NAME = "nba_players_continuous.parquet"
+DATA_FILE_5YEAR_TENSOR_NAME = "nba_players_continuous_tensor_ready.parquet"
+DATA_FILE_5YEAR_OVERLAP = "nba_players_continuous_overlap.parquet"
+DATA_FILE_5YEAR_JSON_NAME = "nba_players_continuous.json"
