@@ -29,6 +29,9 @@ REPORTS_DIR = 'reports/'
 # DATA_FILE_5YEAR_OVERLAP = "nba_player_stats_5years_overlap.npz"
 # DATA_FILE_5YEAR_JSON_NAME = "nba_player_stats_5years.json"
 
+[dataset]
+FILTER_AMT = 5
+
 # Bronze files (raw)
 [dataset.bronze]
 DATA_FILE = "nba_players_bronze.csv"
@@ -44,27 +47,25 @@ DATA_FILE_FILTERED = "nba_players_silver_filtered.csv"
 
 # Gold files (final outputs)
 [dataset.gold]
-DATA_FILE_CONTINUOUS         = "nba_players_gold_continuous.csv"
-DATA_FILE_CONTINUOUS_JSON    = "nba_players_gold_continuous.json"
-DATA_FILE_CONTINUOUS_FIRST   = "nba_players_gold_continuous_first.csv"
+DATA_FILE                       = "nba_players_gold.csv"
+DATA_FILE_JSON                  = "nba_players_gold.json"
+DATA_FILE_CONTINUOUS            = "nba_players_gold_continuous.csv"
+DATA_FILE_CONTINUOUS_JSON       = "nba_players_gold_continuous.json"
+DATA_FILE_CONTINUOUS_FIRST      = "nba_players_gold_continuous_first.csv"
 DATA_FILE_CONTINUOUS_FIRST_JSON = "nba_players_gold_continuous_first.json"
-DATA_FILE_CONTINUOUS_OVERLAP = "nba_players_gold_continuous_overlap.npz"
-
-
-# [models.variables]
-FILTER_AMT = 5
+DATA_FILE_CONTINUOUS_OVERLAP    = "nba_players_gold_continuous_overlap.npz"
 
 [environment]
 LOCAL = true  # "local|true", "azure|false"
 
 [cloud]
 # Set Azure/Fabric credientials per user
-DATALAKE_ACCOUNT_NAME = 'your_datalake_account_name'
-DATALAKE_ACCOUNT_KEY = 'your_datalake_account_key'
-DATALAKE_ACCOUNT_URI = 'https://{}.dfs.core.windows.net'
-DATALAKE_FILESYSTEM_NAME = 'your_datalake_filesystem_name'
-DATALAKE_DIRECTORY_PATH = 'your_datalake_directory_path'
-SERVER_CONNECTION_STRING = 'your_server_connection_string'
+DATALAKE_ACCOUNT_NAME          = 'your_datalake_account_name'
+DATALAKE_ACCOUNT_KEY           = 'your_datalake_account_key'
+DATALAKE_ACCOUNT_URI           = 'https://{}.dfs.core.windows.net'
+DATALAKE_FILESYSTEM_NAME       = 'your_datalake_filesystem_name'
+DATALAKE_DIRECTORY_PATH        = 'your_datalake_directory_path'
+SERVER_CONNECTION_STRING       = 'your_server_connection_string'
 DATALAKE_SQL_CONNECTION_STRING = 'your_datalake_sql_connection_string'
 
 SQL_SERVER_DOMAIN = '.database.windows.net'
@@ -74,10 +75,11 @@ SQL_TABLE_NAME = ''
 SQL_USERNAME = ''
 SQL_PASSWORD = ''
 
-# [cloud.dataset.files]
-DATA_FILE_NAME = "nba_players.parquet"
-DATA_FILE_NAME_JSON = "nba_players.json"
-DATA_FILE_5YEAR_NAME = "nba_players_continuous.parquet"
-DATA_FILE_5YEAR_TENSOR_NAME = "nba_players_continuous_tensor_ready.parquet"
-DATA_FILE_5YEAR_OVERLAP = "nba_players_continuous_overlap.parquet"
-DATA_FILE_5YEAR_JSON_NAME = "nba_players_continuous.json"
+[cloud.dataset]
+DATA_FILE                       = "nba_players_gold.parquet"
+DATA_FILE_JSON                  = "nba_players_gold.json"
+DATA_FILE_CONTINUOUS            = "nba_players_gold_continuous.parquet"
+DATA_FILE_CONTINUOUS_JSON       = "nba_players_gold_continuous.json"
+DATA_FILE_CONTINUOUS_FIRST      = "nba_players_gold_continuous_first.parquet"
+DATA_FILE_CONTINUOUS_FIRST_JSON = "nba_players_gold_continuous_first.json"
+DATA_FILE_CONTINUOUS_OVERLAP    = "nba_players_gold_continuous_overlap.npz"

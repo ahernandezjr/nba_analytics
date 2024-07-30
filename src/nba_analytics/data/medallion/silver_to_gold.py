@@ -4,6 +4,7 @@ from collections import namedtuple
 
 import numpy as np
 import pandas as pd
+import json
 
 from ..transformation import processing, filtering
 
@@ -14,11 +15,19 @@ from ...utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 
 # Define a named tuple for the return value of create_gold_datasets
-GoldDataset = namedtuple('GoldDataset', ['df_continuous', 'df_first_continuous', 'np_overlap', 'dict_continuous', 'dict_first_continuous'])
+GoldDataset = namedtuple('GoldDataset', [
+    'df_filtered',
+    'dict_filtered',
+    'df_continuous',
+    'dict_continuous',
+    'df_first_continuous',
+    'dict_first_continuous',
+    'np_overlap'
+])
 
 
 def create_gold_datasets(df):
@@ -38,49 +47,79 @@ def create_gold_datasets(df):
     """
     logger.debug(f"Filtering dataset for players who have played for more than {FILTER_AMT} years...")
 
+    # Filter unnecessary columns
     df_filtered = filtering.filter_columns(df.copy())
+    dict_filtered = processing.df_to_dict(df_filtered)
 
     # Filter the dataset to include only players who have continuous stretches of at least FILTER_AMT years
     df_continuous = filtering.filter_atleast_continuous_years(df_filtered, FILTER_AMT)
+    dict_continuous = processing.df_to_dict(df_continuous)
+
+    # Filter the dataset to include only players who have a continuous stretch of at least FILTER_AMT years at the start of their career
     df_first_continuous = filtering.filter_first_continuous_years(df_filtered, FILTER_AMT)
+    dict_first_continuous = processing.df_to_first_years_dict(df_first_continuous)
 
     # Create overlap dataset
     np_overlap = processing.create_overlap_data(df_continuous)
 
     # Convert the DataFrames to dictionaries
-    dict_continuous = processing.df_to_dict(df_continuous)
-    dict_first_continuous = processing.df_to_first_years_dict(df_first_continuous)
 
-    return GoldDataset(df_continuous, df_first_continuous, np_overlap, dict_continuous, dict_first_continuous)
+    return GoldDataset(
+        df_filtered=df_filtered,
+        dict_filtered=dict_filtered,
+        df_continuous=df_continuous,
+        dict_continuous=dict_continuous,
+        df_first_continuous=df_first_continuous,
+        dict_first_continuous=dict_first_continuous,
+        np_overlap=np_overlap
+    )
 
 
-def save_df_and_dict(df_first_continuous, np_overlap, dict_continuous):
+def save_df_and_dict(gold_dataset):
     """
     Saves the given DataFrame, numpy array, and dictionary to respective files.
 
     Args:
-        df_first_continuous (pandas.DataFrame): The DataFrame to save.
-        np_overlap (numpy.array): The numpy array to save.
-        dict_continuous (dict): The dictionary to save.
+        gold_dataset (GoldDataset): The named tuple containing the data to save.
 
     Returns:
         None
     """
+    # Define file paths
+    filtered_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE)
+    dict_filtered_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_JSON)
+    continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS)
+    dict_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_JSON)
     first_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST)
+    dict_first_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON)
     overlap_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_OVERLAP)
-    dict_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON)
 
-    logger.debug(f"Saving first_continuous dataset to '{first_continuous_path}'...")
+    logger.debug(f"Saving filtered dataset to '{filtered_path}'...")
+    logger.debug(f"Saving first continuous dataset to '{first_continuous_path}'...")
+    logger.debug(f"Saving continuous dataset to '{continuous_path}'...")
     logger.debug(f"Saving overlap dataset to '{overlap_path}'...")
 
-    df_first_continuous.to_csv(first_continuous_path, index=False)
-    np.save(overlap_path, np_overlap)
-    with open(dict_path, 'w') as json_file:
-        json.dump(dict_continuous, json_file, indent=4)
+    # Save dataframes
+    gold_dataset.df_filtered.to_csv(filtered_path, index=False)
+    gold_dataset.df_continuous.to_csv(continuous_path, index=False)
+    gold_dataset.df_first_continuous.to_csv(first_continuous_path, index=False)
 
+    # Save numpy array
+    np.save(overlap_path, gold_dataset.np_overlap)
+
+    # Save dictionaries as JSON
+    with open(dict_filtered_path, 'w') as json_file:
+        json.dump(gold_dataset.dict_filtered, json_file, indent=4)
+    with open(dict_continuous_path, 'w') as json_file:
+        json.dump(gold_dataset.dict_continuous, json_file, indent=4)
+    with open(dict_first_continuous_path, 'w') as json_file:
+        json.dump(gold_dataset.dict_first_continuous, json_file, indent=4)
+
+    logger.debug(f"Filtered dataset saved to: '{filtered_path}'.")
     logger.debug(f"First-continuous dataset saved to: '{first_continuous_path}'.")
+    logger.debug(f"Continuous dataset saved to: '{continuous_path}'.")
     logger.debug(f"Overlap dataset saved to: '{overlap_path}'.")
-    logger.debug(f"Filtered dictionary saved to: '{dict_path}'.")
+    logger.debug(f"Filtered dictionaries saved to: '{dict_filtered_path}', '{dict_continuous_path}', and '{dict_first_continuous_path}'.")
 
 
 def log_summary(df_first_continuous, np_overlap):
@@ -103,6 +142,7 @@ def log_summary(df_first_continuous, np_overlap):
     logger.info(f"First Continuous DataFrame: Entries={len(df_first_continuous)}, Unique Players={len(df_first_continuous['slug'].unique())}")
     logger.info(f"Overlap DataFrame: Entries={reshaped_overlap.shape[0] * reshaped_overlap.shape[1]}, Unique Players={len(np_overlap)}")
 
+
 def run_processing(df=None):
     """
     Main processing function to create and save datasets.
@@ -114,11 +154,10 @@ def run_processing(df=None):
         GoldDataset: The named tuple containing the filtered DataFrame, numpy array, and dictionaries.
     """
     if df is None:
-        df = pd.read_csv(filename_grabber.get_data_file("silver", settings.DATA_FILE))
+        df = pd.read_csv(filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE))
 
     gold_dataset = create_gold_datasets(df)
-
-    save_df_and_dict(gold_dataset.df_first_continuous, gold_dataset.np_overlap, gold_dataset.dict_first_continuous)
+    save_df_and_dict(gold_dataset)
     log_summary(gold_dataset.df_first_continuous, gold_dataset.np_overlap)
 
     return gold_dataset

@@ -1,3 +1,8 @@
+"""
+This module provides various data cleaning functions for NBA player statistics data.
+It includes functions to clean specific columns, remove non-tensor values, and standardize the data.
+"""
+
 import numpy as np
 import pandas as pd
 
@@ -7,9 +12,7 @@ from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 
-
 logger = get_logger(__name__)
-
 
 def extract_positions(df):
     """
@@ -29,7 +32,6 @@ def extract_positions(df):
 
     return df
 
-
 def extract_team(df):
     """
     Cleans the 'team' column in the given DataFrame.
@@ -38,7 +40,7 @@ def extract_team(df):
         df (pandas.DataFrame): The DataFrame containing the 'team' column.
 
     Returns:
-        df (pandas.DataFrame): The DataFrame with the 'team' column cleaned.
+        pandas.DataFrame: The DataFrame with the 'team' column cleaned.
     """
     logger.debug(f"Extracting teams...")
 
@@ -49,7 +51,6 @@ def extract_team(df):
     logger.debug(f"Teams extracted: {filtered_df['team'].unique()}.")
 
     return df
-
 
 def clean_columns(df):
     """
@@ -80,7 +81,6 @@ def clean_columns(df):
     logger.debug(f"Cleaned columns: {columns_to_drop}.")
 
     return clean_df
-
 
 def clean_rows(df):
     """
@@ -129,10 +129,6 @@ def clean_nontensor_values(df):
             # Convert values to proper types (i.e. str should be converted to int or float)
             df_filtered[column] = df_filtered[column].apply(pd.to_numeric, errors='coerce')
 
-            # Filter the DataFrame to remove non-tensor values (NOT WORKING)
-            # df_filtered = df_filtered.select_dtypes(include=['number'])
-            # df_filtered = df_filtered.dropna()
-
     # Drop columns that have NaN values
     df_filtered = df_filtered.dropna(axis=1)
 
@@ -143,7 +139,6 @@ def clean_nontensor_values(df):
     # df_filtered = pca_analysis(df_filtered)
 
     return df_filtered
-
 
 def standardize_data(df):
     """

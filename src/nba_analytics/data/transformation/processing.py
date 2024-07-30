@@ -9,7 +9,7 @@ from ...utils.config import settings
 from ...utils.logger import get_logger
 
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 logger = get_logger(__name__)
 
@@ -333,10 +333,7 @@ def df_to_dict(df):
     Returns:
         dict: A dictionary with slugs as keys and lists of row dictionaries as values.
     """
-    result = {}
-    grouped = df.groupby('slug')
-    for slug, group in grouped:
-        result[slug] = group.to_dict(orient='records')
+    result = df.groupby('slug').apply(lambda x: x.to_dict(orient='records')).to_dict()
     return result
 
 

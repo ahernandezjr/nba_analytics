@@ -10,7 +10,7 @@ from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 
 # Create logger

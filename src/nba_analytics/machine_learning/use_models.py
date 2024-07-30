@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 
 MODELS_DIR = filename_grabber.get_models_dir()
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

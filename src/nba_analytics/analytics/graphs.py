@@ -21,14 +21,14 @@ from ..utils.logger import get_logger
 # Create logger
 logger = get_logger(__name__)
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load the dataset from the tensor file
 df = pd.read_csv(filename_grabber.get_data_file("gold",
-                                                settings.DATA_FILE_5YEAR_TENSOR_NAME))
+                                                settings.dataset.gold.DATA_FILE_CONTINUOUS))
 
 # Load the numpy array with proper numeric types
 np_overlap = np.loadtxt(filename_grabber.get_data_file("gold",

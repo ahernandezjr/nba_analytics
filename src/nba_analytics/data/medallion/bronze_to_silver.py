@@ -15,7 +15,7 @@ from ...utils.logger import get_logger
 
 logger = get_logger(__name__)
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 
 def create_silver_dataset(df):
@@ -61,13 +61,13 @@ def save_df_and_dict(df_filtered, dict_df):
     logger.debug(f"Saving dataset to '{silver_dir}'...")
 
     # Save the filtered dataset and dictionary to a csv and json file
-    df_filtered_file_path = filename_grabber.get_data_file("silver", settings.DATA_FILE)
+    df_filtered_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE)
     df_filtered.to_csv(df_filtered_file_path, index=False)
 
     logger.debug(f"Cleaned Silver dataset saved to: '{df_filtered_file_path}'.")
 
     # Save dictionary to json
-    dict_df_file_path = filename_grabber.get_data_file("silver", settings.DATA_FILE_JSON)
+    dict_df_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE_JSON)
     dict_df.to_json(dict_df_file_path, indent=4)
 
     logger.debug(f"Cleaned Silver dictionary saved to: '{dict_df_file_path}'.")
@@ -99,7 +99,7 @@ def log_summary(df, df_cleaned):
 def run_processing(df=None):
     # Load the data
     if df is None:
-        df = pd.read_csv(filename_grabber.get_data_file("bronze", settings.DATA_FILE))
+        df = pd.read_csv(filename_grabber.get_data_file("bronze", settings.dataset.bronze.DATA_FILE))
 
     # Create a cleaned dataframe and dictionary
     df_cleaned, dict_df = create_silver_dataset(df)

@@ -1,3 +1,8 @@
+"""
+This module provides functions for filtering and processing NBA player statistics data.
+It includes functions to filter players based on continuous years of play and to filter specific columns.
+"""
+
 import pandas as pd
 from sklearn.decomposition import PCA
 
@@ -5,12 +10,19 @@ from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 
-
 # Create logger
 logger = get_logger(__name__)
 
-
 def filter_columns(df):
+    """
+    Filters the DataFrame to keep only specific columns relevant for analysis.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame containing player data.
+
+    Returns:
+        pandas.DataFrame: The filtered DataFrame with only the specified columns.
+    """
     columns_to_keep = ['slug', 'Year', 'age',
                        'minutes_played', 'made_field_goals', 'attempted_field_goals',
                        'attempted_three_point_field_goals', 'attempted_free_throws',
@@ -19,7 +31,6 @@ def filter_columns(df):
     filtered_df = df[columns_to_keep]
 
     return filtered_df
-
 
 def get_player_years_dict(df):
     """
@@ -32,7 +43,6 @@ def get_player_years_dict(df):
         dict: A dictionary with player ids as keys and lists of years played as values.
     """
     return df.groupby('slug')['Year'].apply(list).to_dict()
-
 
 def get_continuous_years(years, min_years):
     """
@@ -56,6 +66,21 @@ def get_continuous_years(years, min_years):
                 j += 1
     return list(continuous_years)
 
+def has_continuous_stretch(years, min_years):
+    """
+    Checks if there is any continuous stretch of given length in the list of years.
+
+    Args:
+        years (list): List of years the player has played.
+        min_years (int): Minimum number of continuous years required.
+
+    Returns:
+        bool: True if there is a continuous stretch of given length, False otherwise.
+    """
+    return any(
+        years[i] + min_years - 1 == years[i + min_years - 1]
+        for i in range(len(years) - min_years + 1)
+    )
 
 def filter_atleast_continuous_years(df, min_years=5):
     """
@@ -79,12 +104,12 @@ def filter_atleast_continuous_years(df, min_years=5):
 
     df_continuous = df[df['slug'].isin(dict_continuous.keys())]
     df_continuous = df_continuous.sort_values(by=['slug', 'Year'])
+
     df_continuous = df_continuous.groupby('slug').filter(
-        lambda x: get_continuous_years(x['Year'].values, min_years)
+        lambda x: has_continuous_stretch(x['Year'].values, min_years)
     )
 
     return df_continuous
-
 
 def filter_first_continuous_years(df, min_years=5):
     """

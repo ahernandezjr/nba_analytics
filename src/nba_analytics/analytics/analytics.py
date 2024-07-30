@@ -19,7 +19,7 @@ from ..utils.logger import get_logger
 # Create logger
 logger = get_logger(__name__)
 
-FILTER_AMT = settings.FILTER_AMT
+FILTER_AMT = settings.dataset.FILTER_AMT
 
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
