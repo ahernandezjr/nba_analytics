@@ -1,17 +1,18 @@
 # Filtered, Cleaned, Augmented
 # Define structure, enforce schema, and evolve schema as needed
 
-
 import numpy as np
 import pandas as pd
+import json
 
-from ..transformation import cleaning
-from ..transformation import filtering
+from ..transformation import cleaning, filtering, processing
 
 from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 
+
+silver = settings.dataset.silver
 
 logger = get_logger(__name__)
 
@@ -41,11 +42,11 @@ def create_silver_dataset(df):
     df_filtered = cleaning.clean_nontensor_values(df_filtered)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
-    dict_df = df_filtered.groupby('slug').apply(lambda x: x.to_dict(orient='records'))
+    dict_df = processing.df_to_dict(df_filtered)
 
     return df_filtered, dict_df
 
-
+    
 def save_df_and_dict(df_filtered, dict_df):
     """
     Saves the given DataFrame to a CSV file.
@@ -61,14 +62,15 @@ def save_df_and_dict(df_filtered, dict_df):
     logger.debug(f"Saving dataset to '{silver_dir}'...")
 
     # Save the filtered dataset and dictionary to a csv and json file
-    df_filtered_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE)
+    df_filtered_file_path = filename_grabber.get_data_file("silver", silver.DATA_FILE)
     df_filtered.to_csv(df_filtered_file_path, index=False)
 
     logger.debug(f"Cleaned Silver dataset saved to: '{df_filtered_file_path}'.")
 
     # Save dictionary to json
-    dict_df_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE_JSON)
-    dict_df.to_json(dict_df_file_path, indent=4)
+    dict_df_file_path = filename_grabber.get_data_file("silver", silver.DATA_FILE_JSON)
+    with open(dict_df_file_path, 'w') as json_file:
+        json.dump(dict_df, json_file, indent=4)
 
     logger.debug(f"Cleaned Silver dictionary saved to: '{dict_df_file_path}'.")
 

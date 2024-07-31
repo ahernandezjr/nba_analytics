@@ -13,6 +13,8 @@ from ...utils.config import settings
 from ...utils.logger import get_logger
 
 
+gold = settings.dataset.gold
+
 logger = get_logger(__name__)
 
 FILTER_AMT = settings.dataset.FILTER_AMT
@@ -86,13 +88,13 @@ def save_df_and_dict(gold_dataset):
         None
     """
     # Define file paths
-    filtered_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE)
-    dict_filtered_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_JSON)
-    continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS)
-    dict_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_JSON)
-    first_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST)
-    dict_first_continuous_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON)
-    overlap_path = filename_grabber.get_data_file('gold', settings.dataset.gold.DATA_FILE_CONTINUOUS_OVERLAP)
+    filtered_path = filename_grabber.get_data_file('gold', gold.DATA_FILE)
+    dict_filtered_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_JSON)
+    continuous_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS)
+    dict_continuous_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_JSON)
+    first_continuous_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_FIRST)
+    dict_first_continuous_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_FIRST_JSON)
+    overlap_path = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_OVERLAP)
 
     logger.debug(f"Saving filtered dataset to '{filtered_path}'...")
     logger.debug(f"Saving first continuous dataset to '{first_continuous_path}'...")

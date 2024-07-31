@@ -6,6 +6,7 @@ from ...utils.config import settings
 from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
+gold = settings.dataset.gold
 
 # Create logger
 logger = get_logger(__name__)
@@ -96,8 +97,8 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
         return self.scaler.inverse_transform(data)
 
 
-def create_dataset(df_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST,
-                   dict_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON):
+def create_dataset(df_filename=gold.DATA_FILE_CONTINUOUS_FIRST,
+                   dict_filename=gold.DATA_FILE_CONTINUOUS_FIRST_JSON):
     """
     Creates a custom dataset for the NBA player statistics.
 

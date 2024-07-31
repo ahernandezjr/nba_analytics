@@ -12,12 +12,15 @@ from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 
+
+bronze = settings.dataset.bronze
+
+logger = get_logger(__name__)
+
 # Data Creation Variables
 BATCH_SIZE = 100
 RETRY_DELAY = 60
 YEARS_BACK = 12
-
-logger = get_logger(__name__)
 
 def create_directories():
     """
@@ -113,12 +116,12 @@ def collect_data():
     create_directories()
 
     for year in range(2001, 2025):
-        update_players_csv(settings.dataset.bronze.DATA_FILE_BASIC,
-                           settings.dataset.bronze.DATA_FILE_ADVANCED,
+        update_players_csv(bronze.DATA_FILE_BASIC,
+                           bronze.DATA_FILE_ADVANCED,
                            year)
-        merge_player_data(settings.dataset.bronze.DATA_FILE_BASIC,
-                          settings.dataset.bronze.DATA_FILE_ADVANCED,
-                          settings.dataset.bronze.DATA_FILE)
+        merge_player_data(bronze.DATA_FILE_BASIC,
+                          bronze.DATA_FILE_ADVANCED,
+                          bronze.DATA_FILE)
         time.sleep(3.5) # Sleep for 3.5 seconds to avoid rate limiting
 
     logger.info("Data collection completed.")

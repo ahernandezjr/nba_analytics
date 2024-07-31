@@ -76,8 +76,13 @@ SQL_USERNAME = ''
 SQL_PASSWORD = ''
 
 [cloud.dataset]
-DATA_FILE                       = "nba_players_gold.parquet"
-DATA_FILE_JSON                  = "nba_players_gold.json"
+DATA_FILE_BRONZE = "dbo.playerdata.parquet"
+
+DATA_FILE_SILVER      = "nba_players_silver.parquet"
+DATA_FILE_JSON_SILVER = "nba_players_silver.json"
+
+DATA_FILE_GOLD                  = "nba_players_gold.parquet"
+DATA_FILE_JSON_GOLD             = "nba_players_gold.json"
 DATA_FILE_CONTINUOUS            = "nba_players_gold_continuous.parquet"
 DATA_FILE_CONTINUOUS_JSON       = "nba_players_gold_continuous.json"
 DATA_FILE_CONTINUOUS_FIRST      = "nba_players_gold_continuous_first.parquet"

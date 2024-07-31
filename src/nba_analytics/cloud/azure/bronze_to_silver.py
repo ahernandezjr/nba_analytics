@@ -8,9 +8,14 @@ import pyspark.sql.functions as F
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
+from ...data.transformation import cleaning
+
 from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
+
+
+silver = settings.dataset.silver
 
 logger = get_logger(__name__)
 
@@ -71,13 +76,13 @@ def save_df_and_dict(df_filtered, dict_df):
     logger.debug(f"Saving dataset to '{silver_dir}'...")
 
     # Save the filtered dataset and dictionary to a csv and json file
-    df_filtered_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE)
+    df_filtered_file_path = filename_grabber.get_data_file("silver", silver.DATA_FILE)
     df_filtered.write.csv(df_filtered_file_path, header=True, mode='overwrite')
 
     logger.debug(f"Cleaned Silver dataset saved to: '{df_filtered_file_path}'.")
 
     # Save dictionary to json
-    dict_df_file_path = filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE_JSON)
+    dict_df_file_path = filename_grabber.get_data_file("silver", silver.DATA_FILE_JSON)
     with open(dict_df_file_path, 'w') as json_file:
         json.dump(dict_df, json_file, indent=4)
 
