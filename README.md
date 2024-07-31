@@ -65,17 +65,17 @@ The project directory is organized as follows:
 # Work Schedule
 
 <details open>
-  <summary>Week of 7/22</summary>
+  <summary>Week of 7/29</summary>
 
   | Day       | Task | Status |
   | --------- | --------- | --------- |
-  | Monday    | Completed pipeline of bronze_to_silver_to_gold. | &#x2714; |
-  | Tuesday   | Rethinking pipeline. | &#x2714; |
-  | Wednesday | ~~Start Synapse integration to create gold_db.~~ TODO: Needs refactoring of tables input to SQL database. | &#x2714; |
-  | Thursday  | Start refactoring of input data <br> Start refactoring output gold data to integrate dictionaries for 3d data. <br> Start PowerBI integration (using gold output instead of gold_db for now). | &#x2714; |
-  | Friday    | Complete PowerBI prototype report. | &#x2716; |
+  | Monday    | Completed data format refactoring (seperation of base, filtered, continuous, and continuous_first data formats). | &#x2714; |
+  | Tuesday   | Re-worked Databricks code to fix new package setup, refitted SQL, and completed Azure Synapse integration. <br> Restart reports. | &#x2714; |
+  | Wednesday | Complete data changes to include team and other excluded columns. Continue with creating report about Piston's players. | &#x2714; |
+  | Thursday  | Start refactoring of input data <br> Start refactoring output gold data to integrate dictionaries for 3d data. <br> Start PowerBI integration (using gold output instead of gold_db for now). | &#x2716; |
+  | Friday    | -- | &#x2716; |
   | Saturday  | **N/A: No Progress on Saturdays.** | --- |
-  | Sunday    | Integrate new SQL into pipeline. | &#x2716; |
+  | Sunday    | -- | &#x2716; |
 
 </details>
 
@@ -94,6 +94,21 @@ The project directory is organized as follows:
   | Automate workflow using Azure Logic Apps or Azure DevOps. | For streamlined operations. |
   | Finish setting up the Data Factory and integrate with Databricks. | For enhanced data processing and analytics, added for Sunday. |
   | Before Azure Machine Learning Tasks. | Refactor/modify dataset [`processing`]() to use numpy savez for saving with dictionary or label row. |
+
+</details>
+
+<details>
+  <summary>Week of 7/22</summary>
+
+  | Day       | Task | Status |
+  | --------- | --------- | --------- |
+  | Monday    | Completed pipeline of bronze_to_silver_to_gold. | &#x2714; |
+  | Tuesday   | Rethinking pipeline. | &#x2714; |
+  | Wednesday | ~~Start Synapse integration to create gold_db.~~ TODO: Needs refactoring of tables input to SQL database. | &#x2714; |
+  | Thursday  | Start refactoring of input data <br> Start refactoring output gold data to integrate dictionaries for 3d data. <br> Start PowerBI integration (using gold output instead of gold_db for now). | &#x2714; |
+  | Friday    | Finished refactoring of data. | &#x2714; |
+  | Saturday  | **N/A: No Progress on Saturdays.** | --- |
+  | Sunday    | Integrate new SQL into pipeline. | &#x2714; |
 
 </details>
 
