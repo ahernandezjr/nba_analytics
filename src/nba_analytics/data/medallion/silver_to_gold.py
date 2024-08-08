@@ -49,8 +49,12 @@ def create_gold_datasets(df):
     """
     logger.debug(f"Filtering dataset for players who have played for more than {FILTER_AMT} years...")
 
+    df_filtered = df.copy()
+
     # Filter unnecessary columns
-    df_filtered = filtering.filter_columns(df.copy())
+    df_filtered = filtering.filter_columns(df_filtered)
+    df_filtered = filtering.filter_nontensor_values(df_filtered)
+
     dict_filtered = processing.df_to_dict(df_filtered)
 
     # Filter the dataset to include only players who have continuous stretches of at least FILTER_AMT years

@@ -26,8 +26,8 @@ def extract_positions(df):
     """
     logger.debug(f"Extracting positions...")
 
-    df['positions'] = df['positions'].str.extract("<Position\.(.*): '.*'>", expand=False)
-
+    df['positions'] = df['positions'].str.extract(r"<Position\.(.*?): '.*?'>", expand=False)
+    
     logger.debug(f"Positions extracted: {df['positions'].unique()}")
 
     return df
@@ -44,11 +44,28 @@ def extract_team(df):
     """
     logger.debug(f"Extracting teams...")
 
-    filtered_df = df.copy()
+    df['team'] = df['team'].str.extract(r"Team\.(.*)", expand=False)
 
-    filtered_df['team'] = filtered_df['team'].str.extract("Team\.(.*)", expand=False)
-    
-    logger.debug(f"Teams extracted: {filtered_df['team'].unique()}.")
+    logger.debug(f"Teams extracted: {df['team'].unique()}.")
+
+    return df
+
+def extract_columns(df):
+    """
+    Extracts the columns from the given DataFrame that are relevant for analysis.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to extract columns from.
+
+    Returns:
+        pandas.DataFrame: The DataFrame with the relevant columns extracted.
+    """
+    logger.debug(f"Extracting columns...")
+
+    df = extract_team(df)
+    df = extract_positions(df)
+
+    logger.debug(f"Columns extracted.")
 
     return df
 
@@ -106,54 +123,3 @@ def clean_rows(df):
     clean_df = clean_df.drop_duplicates(subset=['slug', 'Year'], keep=False)
 
     return clean_df
-
-
-# TO BE IMPLEMENTED AT DEPTH IN FUTURE
-def clean_nontensor_values(df):
-    """
-    Filters the given DataFrame to remove non-tensor values.
-
-    Args:
-        df (pandas.DataFrame): The input DataFrame.
-
-    Returns:
-        pandas.DataFrame: The filtered DataFrame.
-    """
-    logger.debug("Filtering non-tensor values...")
-
-    df_filtered = df.copy()
-
-    # Perform numerical conversion on all columns except the slug column
-    for column in df_filtered.columns:
-        if column != 'slug':
-            # Convert values to proper types (i.e. str should be converted to int or float)
-            df_filtered[column] = df_filtered[column].apply(pd.to_numeric, errors='coerce')
-
-    # Drop columns that have NaN values
-    df_filtered = df_filtered.dropna(axis=1)
-
-    # TODO: Implement further data cleaning steps here
-        # One hot encoding for categorical values etc...
-
-    # # Apply PCA to the filtered DataFrame
-    # df_filtered = pca_analysis(df_filtered)
-
-    return df_filtered
-
-def standardize_data(df):
-    """
-    Standardizes the given DataFrame.
-
-    Args:
-        df (pandas.DataFrame): The DataFrame to standardize.
-
-    Returns:
-        pandas.DataFrame: The standardized DataFrame.
-    """
-    logger.debug("Standardizing data...")
-
-    # Standardize the data
-    df_standardized = df.copy()
-    df_standardized = (df_standardized - df_standardized.mean()) / df_standardized.std()
-
-    return df_standardized

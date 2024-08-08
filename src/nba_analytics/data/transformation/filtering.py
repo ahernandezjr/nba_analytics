@@ -13,6 +13,7 @@ from ...utils.logger import get_logger
 # Create logger
 logger = get_logger(__name__)
 
+
 def filter_columns(df):
     """
     Filters the DataFrame to keep only specific columns relevant for analysis.
@@ -23,14 +24,49 @@ def filter_columns(df):
     Returns:
         pandas.DataFrame: The filtered DataFrame with only the specified columns.
     """
+    logger.debug(f"Filtering columns...")
+
     columns_to_keep = ['slug', 'Year', 'age',
                        'minutes_played', 'made_field_goals', 'attempted_field_goals',
                        'attempted_three_point_field_goals', 'attempted_free_throws',
                        'defensive_rebounds', 'turnovers', 'player_efficiency_rating',
                        'total_rebound_percentage', 'value_over_replacement_player']
+    
     filtered_df = df[columns_to_keep]
 
     return filtered_df
+
+# TO BE IMPLEMENTED AT DEPTH IN FUTURE
+def filter_nontensor_values(df):
+    """
+    Filters the given DataFrame to remove non-tensor values.
+
+    Args:
+        df (pandas.DataFrame): The input DataFrame.
+
+    Returns:
+        pandas.DataFrame: The filtered DataFrame.
+    """
+    logger.debug("Filtering non-tensor values...")
+
+    df_filtered = df.copy()
+
+    # Perform numerical conversion on all columns except the slug column
+    for column in df_filtered.columns:
+        if column != 'slug':
+            # Convert values to proper types (i.e. str should be converted to int or float)
+            df_filtered[column] = df_filtered[column].apply(pd.to_numeric, errors='coerce')
+
+    # Drop columns that have NaN values
+    df_filtered = df_filtered.dropna(axis=1)
+
+    # TODO: Implement further data cleaning steps here
+        # One hot encoding for categorical values etc...
+
+    # # Apply PCA to the filtered DataFrame
+    # df_filtered = pca_analysis(df_filtered)
+
+    return df_filtered
 
 def get_player_years_dict(df):
     """

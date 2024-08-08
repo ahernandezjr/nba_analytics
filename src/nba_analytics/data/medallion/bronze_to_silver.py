@@ -39,7 +39,7 @@ def create_silver_dataset(df):
     # df_filtered = extract_team(df_filtered)
     df_filtered = cleaning.clean_rows(df_filtered)
     df_filtered = cleaning.clean_columns(df_filtered)
-    df_filtered = cleaning.clean_nontensor_values(df_filtered)
+    df_filtered = cleaning.extract_columns(df_filtered)
 
     # Create a dictionary where the key is the slug and the value is the rows of the filtered dataset
     dict_df = processing.df_to_dict(df_filtered)

@@ -395,3 +395,22 @@ def create_overlap_data(df):
     # np_out = np_out.reshape(np_out.shape[0], -1)
 
     return np_out
+
+
+def standardize_data(df):
+    """
+    Standardizes the given DataFrame.
+
+    Args:
+        df (pandas.DataFrame): The DataFrame to standardize.
+
+    Returns:
+        pandas.DataFrame: The standardized DataFrame.
+    """
+    logger.debug("Standardizing data...")
+
+    # Standardize the data
+    df_standardized = df.copy()
+    df_standardized = (df_standardized - df_standardized.mean()) / df_standardized.std()
+
+    return df_standardized
