@@ -55,9 +55,19 @@ DATA_FILE_CONTINUOUS_FIRST      = "nba_players_gold_continuous_first.csv"
 DATA_FILE_CONTINUOUS_FIRST_JSON = "nba_players_gold_continuous_first.json"
 DATA_FILE_CONTINUOUS_OVERLAP    = "nba_players_gold_continuous_overlap.npz"
 
+# Model files
+[model]
+ARIMA_FILE = "arima_model.pth"
+LSTM_FILE = "lstm_model.pth"
+NN_MANY_TO_ONE_FILE = "nn_many_to_one_model.pth"
+NN_ONE_TO_ONE_FILE = "nn_one_to_one_model.pth"
+XGBOOST_FILE = "xgboost_model.pth"
+
+# Environment
 [environment]
 LOCAL = true  # "local|true", "azure|false"
 
+# Cloud/Azure credentials and settings
 [cloud]
 # Set Azure/Fabric credientials per user
 DATALAKE_ACCOUNT_NAME          = 'your_datalake_account_name'
@@ -75,6 +85,7 @@ SQL_TABLE_NAME = ''
 SQL_USERNAME = ''
 SQL_PASSWORD = ''
 
+# Cloud dataset files
 [cloud.dataset]
 DATA_FILE_BRONZE = "dbo.playerdata.parquet"
 
