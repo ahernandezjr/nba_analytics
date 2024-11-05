@@ -53,7 +53,7 @@ DATA_FILE_CONTINUOUS            = "nba_players_gold_continuous.csv"
 DATA_FILE_CONTINUOUS_JSON       = "nba_players_gold_continuous.json"
 DATA_FILE_CONTINUOUS_FIRST      = "nba_players_gold_continuous_first.csv"
 DATA_FILE_CONTINUOUS_FIRST_JSON = "nba_players_gold_continuous_first.json"
-DATA_FILE_CONTINUOUS_OVERLAP    = "nba_players_gold_continuous_overlap.npz"
+DATA_FILE_CONTINUOUS_OVERLAP    = "nba_players_gold_continuous_overlap.npy"
 
 # Model files
 [model]

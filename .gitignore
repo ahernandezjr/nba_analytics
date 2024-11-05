@@ -167,6 +167,9 @@ cython_debug/
 # *.json
 # *.pth
 
+# MLflow
+mlruns/
+
 # Reference files
 reference/**/*.csv
 reference/**/*.json

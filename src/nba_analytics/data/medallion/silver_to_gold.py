@@ -81,7 +81,7 @@ def create_gold_datasets(df):
     )
 
 
-def save_df_and_dict(gold_dataset):
+def saves_data_files(gold_dataset):
     """
     Saves the given DataFrame, numpy array, and dictionary to respective files.
 
@@ -163,7 +163,7 @@ def run_processing(df=None):
         df = pd.read_csv(filename_grabber.get_data_file("silver", settings.dataset.silver.DATA_FILE))
 
     gold_dataset = create_gold_datasets(df)
-    save_df_and_dict(gold_dataset)
+    saves_data_files(gold_dataset)
     log_summary(gold_dataset.df_first_continuous, gold_dataset.np_overlap)
 
     return gold_dataset
