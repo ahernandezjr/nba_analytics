@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import torch
 
+from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
@@ -109,6 +110,10 @@ def create_dataset(df_filename=gold.DATA_FILE_CONTINUOUS_FIRST,
         NBAPlayerDataset: The custom dataset for the NBA player statistics.
     """
     logger.info("Creating dataset...")
+
+    # Get the data file and dictionary file
+    df_filename = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_FIRST)
+    dict_filename = filename_grabber.get_data_file('gold', gold.DATA_FILE_CONTINUOUS_FIRST_JSON)
 
     logger.info(f"Loading data from {df_filename} and {dict_filename}...")
     # Load the dataset with proper numeric types

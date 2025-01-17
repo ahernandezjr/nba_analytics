@@ -110,3 +110,4 @@ webencodings
 websocket-client
 yarg
 yarl
+mlflow>=2.3.0

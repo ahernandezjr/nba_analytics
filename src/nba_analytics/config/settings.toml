@@ -15,6 +15,15 @@ LOGS_DIR = 'logs/'
 MODELS_DIR = 'models/'
 GRAPHS_DIR = 'graphs/' 
 REPORTS_DIR = 'reports/'
+MLRUNS_DIR = 'mlruns/'
+
+# MLflow settings
+[mlflow]
+TRACKING_URI = "."  # Use current working directory (project root)
+EXPERIMENT_NAME = "NBA Player Analytics"
+TRACKING_URI_TYPE = "file"  # Options: file, sqlite, mysql, postgresql
+BACKEND_STORE_URI = "mlruns"  # Store in project root/mlruns
+ARTIFACT_LOCATION = "mlruns"  # Store in project root/mlruns
 
 # [creation.files]
 # PLAYERS_NAME = "nba_players_raw.csv"

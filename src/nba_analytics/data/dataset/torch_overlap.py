@@ -9,6 +9,7 @@ from ...utils.config import settings
 from ...utils.logger import get_logger
 from sklearn.preprocessing import StandardScaler
 
+gold = settings.dataset.gold
 
 FILTER_AMT = settings.dataset.FILTER_AMT
 
@@ -97,7 +98,7 @@ class NBAPlayerDataset(torch.utils.data.Dataset):
 
 
 def create_dataset(df_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST,
-                   np_overlap_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS,
+                   np_overlap_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_OVERLAP,
                    dict_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST_JSON):
     """
     Creates a custom dataset for the NBA player statistics.
@@ -111,13 +112,12 @@ def create_dataset(df_filename=settings.dataset.gold.DATA_FILE_CONTINUOUS_FIRST,
     logger.info("Creating dataset...")
 
     logger.info(f"Loading data from {df_filename}, {np_overlap_filename}, and {dict_filename}...")
-    
+
     # Load the dataset with proper numeric types
     # df = pd.read_csv(df_filename).apply(pd.to_numeric, errors='coerce')
 
     # Load the numpy array with proper numeric types
-    np_overlap = np.loadtxt(filename_grabber.get_data_file("gold", np_overlap_filename),
-                            delimiter=",")
+    np_overlap = np.load(filename_grabber.get_data_file("gold", np_overlap_filename), allow_pickle=True)
 
     # Reshape the 2D numpy array to its original shape
     np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)

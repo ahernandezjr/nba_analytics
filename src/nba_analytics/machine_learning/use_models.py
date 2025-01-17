@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 
-from ..data.dataset.torch_overlap import NBAPlayerDataset, get_dataset_example
+from ..data.dataset.torch_overlap import create_dataset
 
 from .train_models import get_model
 
@@ -31,25 +31,25 @@ FILTER_AMT = settings.dataset.FILTER_AMT
 # set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load the dataset from the tensor file
-df = pd.read_csv(filename_grabber.get_data_file(dir_name='gold',
-                                                data_file_name=gold.DATA_FILE_CONTINUOUS_FIRST))
+# # Load the dataset from the tensor file
+# df = pd.read_csv(filename_grabber.get_data_file(dir_name='gold',
+#                                                 data_file_name=gold.DATA_FILE_CONTINUOUS_FIRST))
 
-# Load the numpy array with proper numeric types
-np_overlap = np.loadtxt(filename_grabber.get_data_file(dir_name='gold',
-                                                       data_file_name=gold.DATA_FILE_CONTINUOUS_OVERLAP),
-                        delimiter=",")
+# # Load the numpy array with proper numeric types
+# np_overlap = np.loadtxt(filename_grabber.get_data_file(dir_name='gold',
+#                                                        data_file_name=gold.DATA_FILE_CONTINUOUS_OVERLAP),
+#                         delimiter=",")
 
-# Reshape the 2D numpy array to its original shape
-np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
+# # Reshape the 2D numpy array to its original shape
+# np_overlap = np_overlap.reshape(np_overlap.shape[0], FILTER_AMT, -1)
 
-# Load the dictionary with proper numeric types
-df_dict = pd.read_json(filename_grabber.get_data_file(dir_name='gold',
-                                                      data_file_name=gold.DATA_FILE_CONTINUOUS_FIRST_JSON),
-                       typ='series').to_dict()
+# # Load the dictionary with proper numeric types
+# df_dict = pd.read_json(filename_grabber.get_data_file(dir_name='gold',
+#                                                       data_file_name=gold.DATA_FILE_CONTINUOUS_FIRST_JSON),
+#                        typ='series').to_dict()
 
 # Instantiate the dataset
-nba_dataset = NBAPlayerDataset(np_overlap)
+nba_dataset = create_dataset()
 
 # Create a training DataLoader and test DataLoader
 train_loader = DataLoader(nba_dataset, batch_size=32, shuffle=True)
@@ -172,14 +172,13 @@ def use_model(file_index=None):
 
             input_0 = inputs[0]
             outputs = None
-            if model.name == 'nn_lstm':
+            if model.name == 'lstm_model':
                 outputs = model.forward(inputs)[0]
                 outputs = outputs[0]
-            elif model.name == 'nn_one_to_one':
+            elif model.name == 'nn_one_to_one_model':
                 inputs = inputs[0]
                 outputs = model.forward(inputs)
-            elif model.name == 'nn_many_to_one':
-                inputs_copy = inputs
+            elif model.name == 'nn_many_to_one_model':
                 inputs = inputs[:-1].view(-1)
                 outputs = model.forward(inputs)
             else:

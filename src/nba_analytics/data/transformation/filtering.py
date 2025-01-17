@@ -10,6 +10,8 @@ from ...utils import filename_grabber
 from ...utils.config import settings
 from ...utils.logger import get_logger
 
+FILTER_AMT = settings.dataset.FILTER_AMT
+
 # Create logger
 logger = get_logger(__name__)
 
@@ -80,7 +82,7 @@ def get_player_years_dict(df):
     """
     return df.groupby('slug')['Year'].apply(list).to_dict()
 
-def get_continuous_years(years, min_years):
+def get_continuous_years(years, min_years=FILTER_AMT):
     """
     Gets all continuous periods of given length in the list of years.
 
@@ -118,7 +120,7 @@ def has_continuous_stretch(years, min_years):
         for i in range(len(years) - min_years + 1)
     )
 
-def filter_atleast_continuous_years(df, min_years=5):
+def filter_atleast_continuous_years(df, min_years=FILTER_AMT):
     """
     Filters the given DataFrame to include only players who have continuous stretches of given length.
 
@@ -147,7 +149,7 @@ def filter_atleast_continuous_years(df, min_years=5):
 
     return df_continuous
 
-def filter_first_continuous_years(df, min_years=5):
+def filter_first_continuous_years(df, min_years=FILTER_AMT):
     """
     Filters the given DataFrame to include only players whose first 5 years have a continuous stretch of given length.
 
